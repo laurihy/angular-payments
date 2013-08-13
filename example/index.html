@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <title>Angular Payments example</title>
+
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+
+    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    
+    <script src="scripts/angular-payments.min.js"></script>
+    
+    <script>
+
+
+    Stripe.setPublishableKey('fillMePlease')
+
+    angular.module('app', ['angularPayments'])
+
+    MainController = function($scope){
+      $scope.handleStripe = function(status, response){
+        if(response.error) {
+          // there was an error. Fix it.
+        } else {
+          // got stripe token, now charge it or smt
+          token = response.id
+        }
+      }
+    }
+
+    </script>
+
+    <style>
+
+      .ng-invalid {
+        border-color: #f00 !important;
+      }
+
+    </style>
+
+
+  </head>
+  <body ng-app="app">
+
+    <div class="container" ng-controller="MainController">
+
+      <div class="row">
+        <div class="span4 offset4">
+          <div class="row">
+            
+            <div class="span4">
+              <h3>Shut up and take my money!</h3>
+            </div>
+            
+            <form stripe-form="handleStripe">
+
+              <div class="span3">
+                <label for="">Card number</label>
+                <input type="text" class="input-block-level" ng-model="number" payments-validate="card" payments-format="card" />
+              </div>
+              
+              <div class="span1">
+                <label for="">Expiry</label>
+                <input type="text" class="input-block-level" ng-model="expiry" payments-validate="expiry" payments-format="expiry" />
+              </div>
+              
+              <div class="span3">
+                <label for="">Name on card </label>
+                <input type="text" class="input-block-level">
+              </div>
+              
+              <div class="span1">
+                <label for="">CVC</label>
+                <input type="text" class="input-block-level" ng-model="cvc" payments-validate="cvc" payments-format="cvc" />
+              </div>
+              
+              <div class="span4">
+                <button type="submit" class="btn btn-primary btn-large">Submit</button>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </body>
+</html>
