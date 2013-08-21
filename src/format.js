@@ -41,6 +41,7 @@ angular.module('angularPayments')
       }
 
       if (!/^\d+$/.test(digit)) {
+        e.preventDefault();
         return;
       }
 
