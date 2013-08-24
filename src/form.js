@@ -27,7 +27,9 @@ angular.module('angularPayments')
     var ret = {};
 
     for(i in possibleKeys){
-      ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
+        if(possibleKeys.hasOwnProperty(i)){
+            ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
+        }
     }
 
     ret['number'] = ret['number'].replace(/ /g,'');
