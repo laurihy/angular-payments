@@ -49,8 +49,8 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expiryMonth ? true : false;
-        expYearUsed = scope.expiryYear ? true : false;
+        expMonthUsed = scope.expMonth ? true : false;
+        expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
           exp = Common.parseExpiry(scope.expiry)
@@ -73,6 +73,11 @@ angular.module('angularPayments')
 
           });
 
+        } else {
+          scope.$apply(function() {
+            scope[attr.stripeForm].apply(scope, [400, {error: 'Invalid form submitted.'}]);
+          });
+          button.prop('disabled', false);
         }
 
         scope.expiryMonth = expMonthUsed ? scope.expMonth : null;
