@@ -35,7 +35,7 @@ angular.module('angularPayments')
 
   var _validators = {}
 
-  _validators['cvc'] = function(cvc, type){
+  _validators['cvc'] = function(cvc, ctrl, type){
       var ref, ref1;
 
       if (!/^\d+$/.test(cvc)) {
@@ -49,7 +49,7 @@ angular.module('angularPayments')
       }
   }
 
-  _validators['card'] = function(num){
+  _validators['card'] = function(num, ctrl){
       var card, ref;
       
       num = (num + '').replace(/\s+|-/g, '');
@@ -59,6 +59,7 @@ angular.module('angularPayments')
       }
 
       card = Cards.fromNumber(num);
+      ctrl.$card = card != null ? angular.copy(card) : null;
       
       if (!card) {
         return false;
@@ -107,7 +108,7 @@ angular.module('angularPayments')
     return expiry > currentTime;
   }
 
-  return function(type, val){
+  return function(type, val, ctrl){
     if(!_validators[type]){
 
       types = Object.keys(_validators);
@@ -117,7 +118,7 @@ angular.module('angularPayments')
 
       throw errstr;
     }
-    return _validators[type](val);
+    return _validators[type](val, ctrl);
   }
 }])
 
@@ -130,7 +131,7 @@ angular.module('angularPayments')
       var type = attr.paymentsValidate;
 
       var validateFn = function(val) {
-          var valid = _Validate(type, val);
+          var valid = _Validate(type, val, ctrl);
           ctrl.$setValidity(type, valid);
           return valid ? val : undefined;
       };
