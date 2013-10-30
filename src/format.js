@@ -146,10 +146,7 @@ angular.module('angularPayments')
       }
     };
 
-  _reFormatCardNumber = function(e) {
-      
-    var _this = this;
-    
+  var _reFormatCardNumber = function(e) {
     return setTimeout(function() {
       var $target, value;
       $target = angular.element(e.target);
