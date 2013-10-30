@@ -128,10 +128,15 @@ angular.module('angularPayments')
     link: function(scope, elem, attr, ctrl){
 
       var type = attr.paymentsValidate;
-      
-      elem.bind('blur', function(e){
-        ctrl.$setValidity(type, _Validate(type, elem.val()));
-      });
+
+      var validateFn = function(val) {
+          var valid = _Validate(type, val);
+          ctrl.$setValidity(type, valid);
+          return valid ? val : undefined;
+      };
+
+      ctrl.$formatters.push(validateFn);
+      ctrl.$parsers.push(validateFn);
     }
   }
 }])
