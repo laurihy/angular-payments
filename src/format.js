@@ -1,7 +1,7 @@
 angular.module('angularPayments')
 
 
-.factory('_Format',['Cards', function(Cards){
+.factory('_Format',['Cards', 'Common', '$filter', function(Cards, Common, $filter){
 
   var _formats = {}
 
@@ -310,12 +310,34 @@ angular.module('angularPayments')
     }
   };
 
-  _formats['expiry'] = function(elem){
-    elem.bind('keypress', _restrictExpiry)
-    elem.bind('keypress', _formatExpiry)
-    elem.bind('keypress', _formatForwardSlash)
-    elem.bind('keypress', _formatForwardExpiry)
-    elem.bind('keydown', _formatBackExpiry)
+  var _parseExpiry = function(value) {
+    if(value != null) {
+      var obj = Common.parseExpiry(value);
+      var expiry = new Date(obj.year, obj.month-1);
+      return $filter('date')(expiry, 'MM/yyyy');
+    }
+    return null;
+  };
+
+  var _getFormattedExpiry = function(value) {
+    if(value != null) {
+      var obj = Common.parseExpiry(value);
+      var expiry = new Date(obj.year, obj.month-1);
+      return $filter('date')(expiry, 'MM / yyyy');
+    }
+    return null;
+  };
+
+
+  _formats['expiry'] = function(elem, ctrl){
+    elem.bind('keypress', _restrictExpiry);
+    elem.bind('keypress', _formatExpiry);
+    elem.bind('keypress', _formatForwardSlash);
+    elem.bind('keypress', _formatForwardExpiry);
+    elem.bind('keydown', _formatBackExpiry);
+
+    ctrl.$parsers.push(_parseExpiry);
+    ctrl.$formatters.push(_getFormattedExpiry);
   }
 
   return function(type, elem, ctrl){
