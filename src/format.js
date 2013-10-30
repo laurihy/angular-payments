@@ -49,10 +49,9 @@ angular.module('angularPayments')
         return;
       }
 
-      if (card && card.type === 'amex') {
-        re = /^(\d{4}|\d{4}\s\d{6})$/;
-      } else {
-        re = /(?:^|\s)(\d{4})$/;
+      re = Cards.defaultInputFormat();
+      if (card) {
+          re = card.inputFormat;
       }
 
       if (re.test(value)) {
