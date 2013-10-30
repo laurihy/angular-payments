@@ -157,11 +157,18 @@ angular.module('angularPayments')
     });
   };
 
-  _formats['card'] = function(elem){
+  var _parseCardNumber = function(value) {
+    return value != null ? value.replace(/\s/g, '') : value;
+  };
+
+  _formats['card'] = function(elem, ctrl){
     elem.bind('keypress', _restrictCardNumber);
     elem.bind('keypress', _formatCardNumber);
     elem.bind('keydown', _formatBackCardNumber);
     elem.bind('paste', _reFormatCardNumber);
+
+    ctrl.$parsers.push(_parseCardNumber);
+    ctrl.$formatters.push(_getFormattedCardNumber);
   }
 
 
@@ -311,7 +318,7 @@ angular.module('angularPayments')
     elem.bind('keydown', _formatBackExpiry)
   }
 
-  return function(type, elem){
+  return function(type, elem, ctrl){
     if(!_formats[type]){
 
       types = Object.keys(_formats);
@@ -321,7 +328,7 @@ angular.module('angularPayments')
 
       throw errstr;
     }
-    return _formats[type](elem);
+    return _formats[type](elem, ctrl);
   }
 
 }])
@@ -329,8 +336,9 @@ angular.module('angularPayments')
 .directive('paymentsFormat', ['$window', '_Format', function($window, _Format){
     return {
       restrict: 'A',
+      require: 'ngModel',
       link: function(scope, elem, attr, ctrl){
-        _Format(attr.paymentsFormat, elem);
+        _Format(attr.paymentsFormat, elem, ctrl);
       }
     }
 }])
