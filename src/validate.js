@@ -2,7 +2,7 @@ angular.module('angularPayments')
 
 
 
-.factory('_Validate', ['Cards', 'Common', function(Cards, Common){
+.factory('_Validate', ['Cards', 'Common', '$parse', function(Cards, Common, $parse){
 
   var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; }
 
@@ -35,11 +35,17 @@ angular.module('angularPayments')
 
   var _validators = {}
 
-  _validators['cvc'] = function(cvc, ctrl, type){
+  _validators['cvc'] = function(cvc, ctrl, scope, attr){
       var ref, ref1;
 
       if (!/^\d+$/.test(cvc)) {
         return false;
+      }
+
+      var type;
+      if(attr.paymentsTypeModel) {
+          var typeModel = $parse(attr.paymentsTypeModel);
+          type = typeModel(scope);
       }
 
       if (type) {
@@ -49,7 +55,7 @@ angular.module('angularPayments')
       }
   }
 
-  _validators['card'] = function(num, ctrl){
+  _validators['card'] = function(num, ctrl, scope, attr){
       var card, ref;
       
       num = (num + '').replace(/\s+|-/g, '');
@@ -64,6 +70,9 @@ angular.module('angularPayments')
       if (!card) {
         return false;
       }
+
+      var typeModel = $parse(attr.paymentsTypeModel);
+      typeModel.assign(scope, card.type);
 
       ret = (ref = num.length, __indexOf.call(card.length, ref) >= 0) && (card.luhn === false || _luhnCheck(num));
       
@@ -108,7 +117,7 @@ angular.module('angularPayments')
     return expiry > currentTime;
   }
 
-  return function(type, val, ctrl){
+  return function(type, val, ctrl, scope, attr){
     if(!_validators[type]){
 
       types = Object.keys(_validators);
@@ -118,11 +127,34 @@ angular.module('angularPayments')
 
       throw errstr;
     }
-    return _validators[type](val, ctrl);
+    return _validators[type](val, ctrl, scope, attr);
   }
 }])
 
-.directive('paymentsValidate', ['$window', '_Validate', function($window, _Validate){
+
+.factory('_ValidateWatch', ['_Validate', function(_Validate){
+
+    var _validatorWatches = {}
+
+    _validatorWatches['cvc'] = function(type, ctrl, scope, attr){
+        if(attr.paymentsTypeModel) {
+            scope.$watch(attr.paymentsTypeModel, function(newVal, oldVal) {
+                if(newVal != oldVal) {
+                    var valid = _Validate(type, ctrl.$modelValue, ctrl, scope, attr);
+                    ctrl.$setValidity(type, valid);
+                }
+            });
+        }
+    }
+
+    return function(type, ctrl, scope, attr){
+        if(_validatorWatches[type]){
+            return _validatorWatches[type](type, ctrl, scope, attr);
+        }
+    }
+}])
+
+.directive('paymentsValidate', ['$window', '_Validate', '_ValidateWatch', function($window, _Validate, _ValidateWatch){
   return {
     restrict: 'A',
     require: 'ngModel',
@@ -130,8 +162,10 @@ angular.module('angularPayments')
 
       var type = attr.paymentsValidate;
 
+      _ValidateWatch(type, ctrl, scope, attr);
+
       var validateFn = function(val) {
-          var valid = _Validate(type, val, ctrl);
+          var valid = _Validate(type, val, ctrl, scope, attr);
           ctrl.$setValidity(type, valid);
           return valid ? val : undefined;
       };
