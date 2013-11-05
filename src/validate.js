@@ -38,6 +38,9 @@ angular.module('angularPayments')
   _validators['cvc'] = function(cvc, ctrl, scope, attr){
       var ref, ref1;
 
+      // valid if empty - let ng-required handle empty
+      if(cvc == null || cvc.length == 0) return true;
+
       if (!/^\d+$/.test(cvc)) {
         return false;
       }
@@ -57,6 +60,9 @@ angular.module('angularPayments')
 
   _validators['card'] = function(num, ctrl, scope, attr){
       var card, ref;
+
+      // valid if empty - let ng-required handle empty
+      if(num == null || num.length == 0) return true;
       
       num = (num + '').replace(/\s+|-/g, '');
       
@@ -81,7 +87,10 @@ angular.module('angularPayments')
       return ret;
   }
 
-  _validators['expiry'] = function(val){    
+  _validators['expiry'] = function(val){
+    // valid if empty - let ng-required handle empty
+    if(val == null || val.length == 0) return true;
+
     obj = Common.parseExpiry(val);
 
     month = obj.month;
