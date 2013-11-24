@@ -1,7 +1,7 @@
 angular.module('angularPayments')
 
 
-.factory('_Format',['Cards', function(Cards){
+.factory('_Format',['Cards', 'Common', '$filter', function(Cards, Common, $filter){
 
   var _formats = {}
 
@@ -49,10 +49,9 @@ angular.module('angularPayments')
         return;
       }
 
-      if (card && card.type === 'amex') {
-        re = /^(\d{4}|\d{4}\s\d{6})$/;
-      } else {
-        re = /(?:^|\s)(\d{4})$/;
+      re = Cards.defaultInputFormat();
+      if (card) {
+          re = card.inputFormat;
       }
 
       if (re.test(value)) {
@@ -147,10 +146,7 @@ angular.module('angularPayments')
       }
     };
 
-  _reFormatCardNumber = function(e) {
-      
-    var _this = this;
-    
+  var _reFormatCardNumber = function(e) {
     return setTimeout(function() {
       var $target, value;
       $target = angular.element(e.target);
@@ -161,11 +157,18 @@ angular.module('angularPayments')
     });
   };
 
-  _formats['card'] = function(elem){
+  var _parseCardNumber = function(value) {
+    return value != null ? value.replace(/\s/g, '') : value;
+  };
+
+  _formats['card'] = function(elem, ctrl){
     elem.bind('keypress', _restrictCardNumber);
     elem.bind('keypress', _formatCardNumber);
     elem.bind('keydown', _formatBackCardNumber);
     elem.bind('paste', _reFormatCardNumber);
+
+    ctrl.$parsers.push(_parseCardNumber);
+    ctrl.$formatters.push(_getFormattedCardNumber);
   }
 
 
@@ -307,15 +310,37 @@ angular.module('angularPayments')
     }
   };
 
-  _formats['expiry'] = function(elem){
-    elem.bind('keypress', _restrictExpiry)
-    elem.bind('keypress', _formatExpiry)
-    elem.bind('keypress', _formatForwardSlash)
-    elem.bind('keypress', _formatForwardExpiry)
-    elem.bind('keydown', _formatBackExpiry)
+  var _parseExpiry = function(value) {
+    if(value != null) {
+      var obj = Common.parseExpiry(value);
+      var expiry = new Date(obj.year, obj.month-1);
+      return $filter('date')(expiry, 'MM/yyyy');
+    }
+    return null;
+  };
+
+  var _getFormattedExpiry = function(value) {
+    if(value != null) {
+      var obj = Common.parseExpiry(value);
+      var expiry = new Date(obj.year, obj.month-1);
+      return $filter('date')(expiry, 'MM / yyyy');
+    }
+    return null;
+  };
+
+
+  _formats['expiry'] = function(elem, ctrl){
+    elem.bind('keypress', _restrictExpiry);
+    elem.bind('keypress', _formatExpiry);
+    elem.bind('keypress', _formatForwardSlash);
+    elem.bind('keypress', _formatForwardExpiry);
+    elem.bind('keydown', _formatBackExpiry);
+
+    ctrl.$parsers.push(_parseExpiry);
+    ctrl.$formatters.push(_getFormattedExpiry);
   }
 
-  return function(type, elem){
+  return function(type, elem, ctrl){
     if(!_formats[type]){
 
       types = Object.keys(_formats);
@@ -325,7 +350,7 @@ angular.module('angularPayments')
 
       throw errstr;
     }
-    return _formats[type](elem);
+    return _formats[type](elem, ctrl);
   }
 
 }])
@@ -333,8 +358,9 @@ angular.module('angularPayments')
 .directive('paymentsFormat', ['$window', '_Format', function($window, _Format){
     return {
       restrict: 'A',
+      require: 'ngModel',
       link: function(scope, elem, attr, ctrl){
-        _Format(attr.paymentsFormat, elem);
+        _Format(attr.paymentsFormat, elem, ctrl);
       }
     }
 }])
