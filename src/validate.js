@@ -59,26 +59,42 @@ angular.module('angularPayments')
   }
 
   _validators['card'] = function(num, ctrl, scope, attr){
-      var card, ref;
+      var card, ref, typeModel;
+
+      if(attr.paymentsTypeModel) {
+          typeModel = $parse(attr.paymentsTypeModel);
+      }
+
+      var clearCard = function(){
+          if(typeModel) {
+              typeModel.assign(scope, null);
+          }
+          ctrl.$card = null;
+      };
 
       // valid if empty - let ng-required handle empty
-      if(num == null || num.length == 0) return true;
+      if(num == null || num.length == 0){
+        clearCard();
+        return true;
+      }
 
       num = (num + '').replace(/\s+|-/g, '');
 
       if (!/^\d+$/.test(num)) {
+        clearCard();
         return false;
       }
 
       card = Cards.fromNumber(num);
-      ctrl.$card = card != null ? angular.copy(card) : null;
 
-      if (!card) {
+      if(!card) {
+        clearCard();
         return false;
       }
 
-      if(attr.paymentsTypeModel) {
-          var typeModel = $parse(attr.paymentsTypeModel);
+      ctrl.$card = angular.copy(card);
+
+      if(typeModel) {
           typeModel.assign(scope, card.type);
       }
 
