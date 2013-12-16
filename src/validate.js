@@ -14,7 +14,7 @@ angular.module('angularPayments')
     digits = (num + '').split('').reverse();
 
     for (i = 0, len = digits.length; i < len; i++) {
-      
+
       digit = digits[i];
       digit = parseInt(digit, 10);
 
@@ -59,31 +59,47 @@ angular.module('angularPayments')
   }
 
   _validators['card'] = function(num, ctrl, scope, attr){
-      var card, ref;
+      var card, ref, typeModel;
+
+      if(attr.paymentsTypeModel) {
+          typeModel = $parse(attr.paymentsTypeModel);
+      }
+
+      var clearCard = function(){
+          if(typeModel) {
+              typeModel.assign(scope, null);
+          }
+          ctrl.$card = null;
+      };
 
       // valid if empty - let ng-required handle empty
-      if(num == null || num.length == 0) return true;
-      
+      if(num == null || num.length == 0){
+        clearCard();
+        return true;
+      }
+
       num = (num + '').replace(/\s+|-/g, '');
-      
+
       if (!/^\d+$/.test(num)) {
+        clearCard();
         return false;
       }
 
       card = Cards.fromNumber(num);
-      ctrl.$card = card != null ? angular.copy(card) : null;
-      
-      if (!card) {
+
+      if(!card) {
+        clearCard();
         return false;
       }
 
-      if(attr.paymentsTypeModel) {
-          var typeModel = $parse(attr.paymentsTypeModel);
+      ctrl.$card = angular.copy(card);
+
+      if(typeModel) {
           typeModel.assign(scope, card.type);
       }
 
       ret = (ref = num.length, __indexOf.call(card.length, ref) >= 0) && (card.luhn === false || _luhnCheck(num));
-      
+
       return ret;
   }
 
@@ -101,19 +117,19 @@ angular.module('angularPayments')
     if (!(month && year)) {
       return false;
     }
-    
+
     if (!/^\d+$/.test(month)) {
       return false;
     }
-    
+
     if (!/^\d+$/.test(year)) {
       return false;
     }
-    
+
     if (!(parseInt(month, 10) <= 12)) {
       return false;
     }
-    
+
     if (year.length === 2) {
       prefix = (new Date).getFullYear();
       prefix = prefix.toString().slice(0, 2);
@@ -124,7 +140,7 @@ angular.module('angularPayments')
     currentTime = new Date;
     expiry.setMonth(expiry.getMonth() - 1);
     expiry.setMonth(expiry.getMonth() + 1, 1);
-    
+
     return expiry > currentTime;
   }
 
