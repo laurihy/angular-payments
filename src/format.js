@@ -40,7 +40,7 @@ angular.module('angularPayments')
         return;
       }
 
-      if (!/^\d+$/.test(digit)) {
+      if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
         e.preventDefault();
         return;
       }
@@ -111,7 +111,7 @@ angular.module('angularPayments')
         return;
       }
       
-      if(/\d\s$/.test(value)) {
+      if(/\d\s$/.test(value) && !e.meta && e.keyCode >= 46) {
         e.preventDefault();
         return $target.val(value.replace(/\d\s$/, ''));
       } else if (/\s\d?$/.test(value)) {
@@ -178,7 +178,7 @@ angular.module('angularPayments')
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit)) {
+    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
       e.preventDefault();
       return;
     }
@@ -205,7 +205,7 @@ angular.module('angularPayments')
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit)) {
+    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
       e.preventDefault();
       return;
     }
@@ -228,7 +228,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit)) {
+    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
       e.preventDefault();
       return;
     }
@@ -252,7 +252,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit)) {
+    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
       return;
     }
     
