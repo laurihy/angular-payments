@@ -139,10 +139,6 @@ See example-folder. You can run the example with
 	
 then connect to it at http://localhost:8000/example/index.html
 
-Also, there's a demo at:
-
-https://angularstripe-docoye.backliftapp.com/example/
-
 
 ## Contributors
 
