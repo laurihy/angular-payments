@@ -32,7 +32,7 @@ angular.module('angularPayments')
         }
     }
 
-    ret['number'] = ret['number'].replace(/ /g,'');
+    ret['number'] = (ret['number'] || '').replace(/ /g,'');
 
     return ret;
   }
