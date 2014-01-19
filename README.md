@@ -95,7 +95,7 @@ Possible formats:
 
 #### cvc
 
-	<input type="text" payments-format="expiry" />
+	<input type="text" payments-format="cvc" />
 
 - Limit to 4 digits
 - *Could also be used to match with card type, but this is not implemented yet.*
