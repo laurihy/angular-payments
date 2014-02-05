@@ -13,7 +13,7 @@
     "stripe-angular",
     "stripeAngular",
     "angular-payments",
-    "angularPayments",
+    "angularPayments"
   ],
   "license": "MIT",
   "ignore": [
