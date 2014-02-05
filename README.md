@@ -34,7 +34,11 @@ To use Angular Payments, add angularPayments as a dependency to your AngularJS m
 If you are using `stripe-form`, follow the instructions above on including
 stripe. 
 
-The module ships 9 directives, all of which should be added as attributes to elements. 
+The module ships 3 directives, all of which should be added as attributes to elements. 
+
+* paymentsValidate
+* paymentsFormat
+* stripeFormat
 
 ### paymentsValidate
 
