@@ -27,10 +27,12 @@ angular.module('angularPayments')
     var ret = {};
 
     for(i in possibleKeys){
-      ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
+        if(possibleKeys.hasOwnProperty(i)){
+            ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
+        }
     }
 
-    ret['number'] = ret['number'].replace(/ /g,'');
+    ret['number'] = (ret['number'] || '').replace(/ /g,'');
 
     return ret;
   }
@@ -47,8 +49,8 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expiryMonth ? true : false;
-        expYearUsed = scope.expiryYear ? true : false;
+        expMonthUsed = scope.expMonth ? true : false;
+        expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
           exp = Common.parseExpiry(scope.expiry)
@@ -71,6 +73,11 @@ angular.module('angularPayments')
 
           });
 
+        } else {
+          scope.$apply(function() {
+            scope[attr.stripeForm].apply(scope, [400, {error: 'Invalid form submitted.'}]);
+          });
+          button.prop('disabled', false);
         }
 
         scope.expiryMonth = expMonthUsed ? scope.expMonth : null;

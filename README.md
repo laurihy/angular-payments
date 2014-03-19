@@ -42,6 +42,14 @@ Possible validation types are:
 #### card
 
 	<input type="text" ng-model="number" payments-validate="card" />
+	
+Card validation also uses an extra attribute "payments-type-model". This attribute defines a model on the scope where the card type will be set as the field recognizes the type from the number.
+
+	<input type="text" ng-model="number" payments-validate="card" payments-type-model="type"/>
+	
+In this case $scope.number will have the card number from the field and $scope.type will have the credit card type.
+
+The card validator will also place a $card object on the on the input control as the card type is recognized.  This card object has a number of different fields.  It's easiest to get to this object if both the form and the input have a name, in which case you can access the card object at $scope.formName.inputName.$card.
 
 #### expiry
 
@@ -52,13 +60,20 @@ Expiry actually matches, that a string with format mm / yy[yy] is a valid and no
 #### cvc
 
 	<input type="text" ng-model="cvc" payments-validate="cvc" />
+	
+CVC validation also uses an extra attribute "payments-type-model". This attribute defines a model on the scope where the CVC will load the card type in order to validate CVC rules based on the card.  This attribute is meant to be used in conjunction with the same attribute on the card validation.
 
+	<input type="text" ng-model="cvc" payments-validate="cvc" payments-type-model="type"/>
+	
+In this case the CVC field will change its validation rules when $scope.type changes.  For example, a 'visa' type will require 3 digits, but an 'amex' type will allow 3 or 4.
 
 ### paymentsFormat
 
 Is used for formatting fields.
 
 	<input type="text" payments-format="FORMATTING_TYPE" />
+	
+For formatting to work, element must have an associated ng-model -value.
 
 Possible formats:
 
@@ -80,7 +95,7 @@ Possible formats:
 
 #### cvc
 
-	<input type="text" payments-format="expiry" />
+	<input type="text" payments-format="cvc" />
 
 - Limit to 4 digits
 - *Could also be used to match with card type, but this is not implemented yet.*
@@ -118,9 +133,18 @@ Basically the directive sends the credit card details directly to stripe, which 
 
 ## Example
 
-See example-folder. Also, there's a demo at:
+See example-folder. You can run the example with
 
-https://angularstripe-docoye.backliftapp.com/example/
+	grunt connect
+	
+then connect to it at http://localhost:8000/example/index.html
+
+
+## Contributors
+
+Please Edit files in `src/`-folder and before submitting pull request, run grunt to compile and minify files in `lib`-folder.
+
+Despite of slow response times, all patches, bugfixes and features are more and welcome and much appreciated. Thanks to all who have and will contribute! :)
 
 ## License 
 

@@ -25,11 +25,21 @@ module.exports = function(grunt) {
           'lib/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
+    },
+    connect: {
+      server: {
+        options: {
+          port: 8000,
+          base: '.',
+          keepalive: true
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-connect');
 
   grunt.registerTask('default', ['concat', 'uglify']);
 
