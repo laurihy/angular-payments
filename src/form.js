@@ -10,7 +10,7 @@ angular.module('angularPayments')
 
 
   // filter valid stripe-values from scope and convert them from camelCase to snake_case
-  _getDataToSend = function(data){
+  _getDataToSend = function(data, scope){
            
     var possibleKeys = ['number', 'expMonth', 'expYear', 
                     'cvc', 'name','addressLine1', 
@@ -27,8 +27,12 @@ angular.module('angularPayments')
     var ret = {};
 
     for(i in possibleKeys){
-        if(possibleKeys.hasOwnProperty(i) && data[possibleKeys[i]]){
+        if(possibleKeys.hasOwnProperty(i)) {
+          if (data[possibleKeys[i]]){
             ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]].$modelValue);
+          } else if (scope[possibleKeys[i]]) {
+            ret[camelToSnake(possibleKeys[i])] = angular.copy(scope[possibleKeys[i]]);
+          }
         }
     }
 
@@ -56,8 +60,8 @@ angular.module('angularPayments')
         if(!(expMonthUsed && expYearUsed)){
           if (formValues.expiry && formValues.expiry.$modelValue) {
             exp = Common.parseExpiry(formValues.expiry.$modelValue);
-            scope.expMonth = exp.month
-            scope.expYear = exp.year
+            scope.expMonth = exp.month;
+            scope.expYear = exp.year;
           }
         }
 
@@ -66,7 +70,7 @@ angular.module('angularPayments')
 
         if(form.hasClass('ng-valid')) {
           
-          $window.Stripe.createToken(_getDataToSend(scope[attr.name]), function() {
+          $window.Stripe.createToken(_getDataToSend(scope[attr.name], scope), function() {
             var args = arguments;
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
