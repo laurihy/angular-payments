@@ -10,7 +10,12 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     
-    <script src="../lib/angular-payments.min.js"></script>
+    <script src="../src/module.js"></script>
+    <script src="../src/common.js"></script>
+    <script src="../src/cards.js"></script>
+    <script src="../src/form.js"></script>
+    <script src="../src/format.js"></script>
+    <script src="../src/validate.js"></script>
     
     <script>
 
@@ -90,22 +95,22 @@
 
               <div class="span3">
                 <label for="">Card number</label>
-                <input type="text" class="input-block-level" ng-model="number" payments-validate="card" payments-format="card" payments-type-model="type" ng-class="myForm.number.$card.type"/>
+                <input type="text" name="number" class="input-block-level" ng-model="payment.number" payments-validate="card" payments-format="card" payments-type-model="type" ng-class="myForm.number.$card.type"/>
               </div>
               
               <div class="span1">
                 <label for="">Expiry</label>
-                <input type="text" class="input-block-level" ng-model="expiry" payments-validate="expiry" payments-format="expiry" />
+                <input type="text" name="expiry" class="input-block-level" ng-model="expiry" payments-validate="expiry" payments-format="expiry" />
               </div>
               
               <div class="span3">
                 <label for="">Name on card </label>
-                <input type="text" class="input-block-level">
+                <input type="text" name="name" class="input-block-level">
               </div>
               
               <div class="span1">
                 <label for="">CVC</label>
-                <input type="text" class="input-block-level" ng-model="cvc" payments-validate="cvc" payments-format="cvc" payments-type-model="type"/>
+                <input type="text" name="cvc" class="input-block-level" ng-model="cvc" payments-validate="cvc" payments-format="cvc" payments-type-model="type"/>
               </div>
               
               <div class="span4">

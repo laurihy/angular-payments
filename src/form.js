@@ -27,8 +27,8 @@ angular.module('angularPayments')
     var ret = {};
 
     for(i in possibleKeys){
-        if(possibleKeys.hasOwnProperty(i)){
-            ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
+        if(possibleKeys.hasOwnProperty(i) && data[possibleKeys[i]]){
+            ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]].$modelValue);
         }
     }
 
@@ -45,7 +45,8 @@ angular.module('angularPayments')
           throw 'stripeForm requires that you have stripe.js installed. Include https://js.stripe.com/v2/ into your html.';
       }
 
-      var form = angular.element(elem);
+      var form = angular.element(elem),
+          formValues = scope[attr.name];
 
       form.bind('submit', function() {
 
@@ -53,9 +54,11 @@ angular.module('angularPayments')
         expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
+          if (formValues.expiry && formValues.expiry.$modelValue) {
+            exp = Common.parseExpiry(formValues.expiry.$modelValue);
+            scope.expMonth = exp.month
+            scope.expYear = exp.year
+          }
         }
 
         var button = form.find('button');
@@ -63,8 +66,7 @@ angular.module('angularPayments')
 
         if(form.hasClass('ng-valid')) {
           
-
-          $window.Stripe.createToken(_getDataToSend(scope), function() {
+          $window.Stripe.createToken(_getDataToSend(scope[attr.name]), function() {
             var args = arguments;
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
