@@ -131,6 +131,12 @@ And then:
 Basically the directive sends the credit card details directly to stripe, which then returns a token that you can use to charge the card, subscribe a user or to do other things. This ensures that the card details themselves never hit your backend and thus you have to worry a little bit less.
 
 
+## recurlyForm
+
+Although it requires a bit more work to implement, this directive intercepts the form submission and calls out to `recurly.js`.
+
+TODO: Finish
+
 ## Example
 
 See example-folder. You can run the example with

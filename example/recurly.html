@@ -5,10 +5,12 @@
     <title>Angular Payments example</title>
 
     <link href="https://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" rel="stylesheet">
+    
+    <!-- I'm not happy that recurly requires jQuery either -->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script type="text/javascript" src="recurly.min.js"></script>
 
-    <script type="text/javascript" src="https://js.stripe.com/v2/"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.14/angular.min.js"></script>
     
     <script src="../src/module.js"></script>
     <script src="../src/common.js"></script>
@@ -19,13 +21,25 @@
     
     <script>
 
-
-    Stripe.setPublishableKey('pk_test_XRdvkwONc4YCTiyXK7GpM7yD')
-
     angular.module('app', ['angularPayments'])
 
+    Recurly.config({
+      subdomain: 'fullstackio',
+      currency: "USD"
+    })
+
     MainController = function($scope){
-      $scope.handleStripe = function(status, response){
+      $scope.payment = {
+        number: '4242424242424242',
+        expiry: '01/18',
+        name: 'Ari Lerner',
+        cvc: '123',
+        addressZip: '94110',
+        plan_code: 'Basic',
+        quantity: 1,
+        signature: ''
+      }
+      $scope.handleRecurly = function(status, response){
         console.log('response', status, response);
         if(response.error) {
           // there was an error. Fix it.
@@ -92,7 +106,7 @@
               <h3>Shut up and take my money!</h3>
             </div>
             
-            <form stripe-form="handleStripe" name="myForm">
+            <form recurly-form="handleRecurly" name="myForm">
 
               <div class="span3">
                 <label for="">Card number</label>
@@ -106,19 +120,32 @@
               
               <div class="span1">
                 <label for="">Expiry</label>
-                <input type="text" name="expiry" class="input-block-level" ng-model="expiry" payments-validate="expiry" payments-format="expiry" />
+                <input type="text" name="expiry" class="input-block-level" ng-model="payment.expiry" payments-validate="expiry" payments-format="expiry" />
               </div>
               
               <div class="span3">
                 <label for="">Name on card </label>
-                <input type="text" name="name" class="input-block-level">
+                <input type="text" name="name" ng-model='payment.name' class="input-block-level">
               </div>
               
               <div class="span1">
                 <label for="">CVC</label>
-                <input type="text" name="cvc" class="input-block-level" ng-model="cvc" payments-validate="cvc" payments-format="cvc" payments-type-model="type"/>
+                <input type="text" name="cvc" class="input-block-level" ng-model="payment.cvc" payments-validate="cvc" payments-format="cvc" payments-type-model="type"/>
               </div>
-              
+
+              <div class="span3">
+                <label for="zip">Zipcode</label>
+                <input type="text"
+                        name="addressZip"
+                        class="input-block-level"
+                        ng-model='payment.addressZip'
+                        >
+              </div>
+
+              <input type="hidden" ng-model='payment.signature' name='signature'>
+              <input type="hidden" ng-model='payment.plan_code' name="plan_code" ng-value="basic">
+              <input type="hidden" ng-model='payment.quantity' name="quantity" ng-value="1">
+
               <div class="span4">
                 <button type="submit" class="btn btn-primary btn-large">Submit</button>
               </div>
