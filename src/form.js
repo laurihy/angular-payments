@@ -140,7 +140,7 @@ angular.module('angularPayments')
           
           var obj = FormDataMiner(scope[attr.name], expiry, [
             'signature', 'currency', 'plan', 'quantity', 'company_name',
-            'email', 'plan_code'
+            'email', 'plan_code', 'account_code'
           ]);
           if (!obj.currency) obj.currency = 'USD';
 
@@ -154,20 +154,18 @@ angular.module('angularPayments')
             obj.last_name = obj.last_name.join(" ")
           }
 
-          console.log('obj', obj);
-
           // First, create account object
           account = createObject(Recurly.Account)
           account.firstName = obj.first_name
           account.lastName = obj.last_name
           account.companyName = obj.company_name
           account.email = obj.email
+          account.account_code = obj.account_code
 
           // Plan
           plan = createObject(Recurly.Plan)
           plan.plan_code = obj.plan_code
           plan.quantity = obj.quantity
-          console.log("PLAN", plan);
 
           // Billing
           billing = createObject(Recurly.BillingInfo)

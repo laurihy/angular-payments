@@ -37,7 +37,8 @@
         addressZip: '94110',
         plan_code: 'Basic',
         quantity: 1,
-        signature: ''
+        signature: '',
+        account_code: ''
       }
       $scope.handleRecurly = function(status, response){
         console.log('response', status, response);
@@ -143,6 +144,7 @@
               </div>
 
               <input type="hidden" ng-model='payment.signature' name='signature'>
+              <input type="hidden" ng-model='payment.account_code' name='account_code'>
               <input type="hidden" ng-model='payment.plan_code' name="plan_code" ng-value="basic">
               <input type="hidden" ng-model='payment.quantity' name="quantity" ng-value="1">
 
