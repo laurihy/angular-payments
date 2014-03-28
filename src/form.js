@@ -143,7 +143,8 @@ angular.module('angularPayments')
         if(form.hasClass('ng-valid')) {
           
           var obj = FormDataMiner(scope[attr.name], expiry, [
-            'first_name', 'last_name', 'cvv'
+            'first_name', 'last_name', 'cvv',
+            'description'
           ]);
           if (!obj.currency) obj.currency = 'USD';
 
@@ -157,17 +158,23 @@ angular.module('angularPayments')
             obj.last_name = obj.last_name.join(" ")
           }
 
-          var recurlyOptions = {
-            first_name: obj.first_name, 
-            last_name: obj.last_name,
-            number: obj.number,
-            cvv: obj.cvc,
-            month: (obj.exp_month || '').toString(),
-            year: (obj.exp_year || '').toString(),
-            zip: obj.zip
+          var recurlyFn, recurlyOptions;
+
+          if (usePaypal) {
+            recurlyFn = 'paypal';
+            recurlyOptions = obj;
+          } else {
+            recurlyFn = 'token';
+            recurlyOptions = {
+              first_name: obj.first_name, 
+              last_name: obj.last_name,
+              number: obj.number,
+              cvv: obj.cvc,
+              month: (obj.exp_month || '').toString(),
+              year: (obj.exp_year || '').toString(),
+              zip: obj.zip
           }
 
-          recurlyFn = usePaypal ? 'paypal' : 'token';
           $window.recurly[recurlyFn](recurlyOptions, function(err, token) {
             if (err) {
               doneFn([400, {error: err}]);
