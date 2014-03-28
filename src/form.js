@@ -109,7 +109,8 @@ angular.module('angularPayments')
       }
 
       var form = angular.element(elem),
-          formValues = scope[attr.name];
+          formValues = scope[attr.name],
+          usePaypal = attr.paypal;
 
       form.bind('submit', function() {
 
@@ -166,7 +167,8 @@ angular.module('angularPayments')
             zip: obj.zip
           }
 
-          $window.recurly.token(recurlyOptions, function(err, token) {
+          recurlyFn = usePaypal ? 'paypal' : 'token';
+          $window.recurly[recurlyFn](recurlyOptions, function(err, token) {
             if (err) {
               doneFn([400, {error: err}]);
             } else {
