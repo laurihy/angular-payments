@@ -54,7 +54,8 @@ angular.module('angularPayments')
       }
 
       var form = angular.element(elem),
-          formValues = scope[attr.name];
+          formValues = scope[attr.name],
+          expiry = {};
 
       form.bind('submit', function() {
 
@@ -103,23 +104,17 @@ angular.module('angularPayments')
   return {
     restrict: 'A',
     link: function(scope, elem, attr) {
-      if(!$window.Recurly){
-          throw 'recurlyForm requires that you have recurly.js installed.';
+      if(!$window.recurly){
+          throw 'recurlyForm requires that you have recurly.js installed. Please include https://js.recurly.com/v3/recurly.js in your html';
       }
-
-      // From recurly.js
-      var createObject = function(o) {
-        var F;
-        F = function() {};
-        F.prototype = o;
-        return new F();
-      };
 
       var form = angular.element(elem),
           formValues = scope[attr.name];
 
       form.bind('submit', function() {
 
+        var expiry = {};
+        // TODO: MOVE THIS
         expMonthUsed = scope.expMonth ? true : false;
         expYearUsed = scope.expYear ? true : false;
 
@@ -136,11 +131,18 @@ angular.module('angularPayments')
         var button = form.find('button');
         button.prop('disabled', true);
 
+        // Function to be run when done
+        var doneFn = function(resp) {
+          scope.$apply(function() {
+            scope[attr.recurlyForm].apply(scope, resp);
+          });
+          button.prop('disabled', false);
+        }
+
         if(form.hasClass('ng-valid')) {
           
           var obj = FormDataMiner(scope[attr.name], expiry, [
-            'signature', 'currency', 'plan', 'quantity', 'company_name',
-            'email', 'plan_code', 'account_code'
+            'first_name', 'last_name', 'cvv'
           ]);
           if (!obj.currency) obj.currency = 'USD';
 
@@ -154,61 +156,28 @@ angular.module('angularPayments')
             obj.last_name = obj.last_name.join(" ")
           }
 
-          // First, create account object
-          account = createObject(Recurly.Account)
-          account.firstName = obj.first_name
-          account.lastName = obj.last_name
-          account.companyName = obj.company_name
-          account.email = obj.email
-          account.account_code = obj.account_code
+          var recurlyOptions = {
+            first_name: obj.first_name, 
+            last_name: obj.last_name,
+            number: obj.number,
+            cvv: obj.cvc,
+            month: (obj.exp_month || '').toString(),
+            year: (obj.exp_year || '').toString(),
+            zip: obj.zip
+          }
 
-          // Plan
-          plan = createObject(Recurly.Plan)
-          plan.plan_code = obj.plan_code
-          plan.quantity = obj.quantity
-
-          // Billing
-          billing = createObject(Recurly.BillingInfo)
-          billing.firstName = obj.first_name
-          billing.lastName = obj.last_name
-          billing.address1 = obj.address_line1
-          billing.address2 = obj.address_line2
-          billing.city = obj.address_city
-          billing.zip = obj.address_zip
-          billing.state = obj.address_state
-          billing.country = obj.address_country
-          billing.number = obj.number
-          billing.month = obj.exp_month
-          billing.year = obj.exp_year
-          billing.cvv = obj.cvc
-
-          // Subscription
-          subscription = createObject(Recurly.Subscription)
-          subscription.plan        = plan
-          subscription.account     = account
-          subscription.billingInfo = billing
-
-          subscription.save({
-            signature: obj.signature,
-            success: function(resp) {
-              console.log("SUCCESS", resp);
+          $window.recurly.token(recurlyOptions, function(err, token) {
+            if (err) {
+              doneFn([400, {error: err}]);
+            } else {
               var args = arguments;
-              scope.$apply(function() {
-                scope[attr.recurlyForm].apply(scope, args);
-              });
-              button.prop('disabled', false);
-            },
-            error: function(reason) {
-              scope[attr.recurlyForm].apply(scope, [400, {error: reason}]);
-              button.prop('disabled', false);
+              doneFn(args);
             }
           });
 
+
         } else {
-          scope.$apply(function() {
-            scope[attr.stripeForm].apply(scope, [400, {error: 'Invalid form submitted.'}]);
-          });
-          button.prop('disabled', false);
+          doneFn([400, {error: 'Invalid form submitted.'}]);
         }
 
         scope.expiryMonth = expMonthUsed ? scope.expMonth : null;
