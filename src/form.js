@@ -1,3 +1,5 @@
+'use strict';
+
 angular.module('angularPayments')
 .factory('FormDataMiner', function() {
   // data that is sent to stripe is filtered from scope, looking for valid values to
@@ -5,23 +7,25 @@ angular.module('angularPayments')
 
 
   // filter valid stripe-values from scope and convert them from camelCase to snake_case
-   return function(data, exp, otherPossibleKeys){
+   var mine = function (data, exp, otherPossibleKeys){
            
     var possibleKeys = ['number', 'expMonth', 'expYear', 
-                    'cvc', 'name','addressLine1', 
+                    'cvc', 'name', 'addressLine1', 
                     'addressLine2', 'addressCity',
                     'addressState', 'addressZip',
-                    'addressCountry']
+                    'addressCountry'];
 
-    for (i in otherPossibleKeys) {
-      possibleKeys.push(otherPossibleKeys[i]);
+    for (var i in otherPossibleKeys) {
+      if (i) {
+        possibleKeys.push(otherPossibleKeys[i]);
+      }
     }
     
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){
         return "_"+m.toLowerCase();
       });
-    }
+    };
 
     var ret = {};
 
@@ -35,10 +39,14 @@ angular.module('angularPayments')
         }
     }
 
-    ret['number'] = (ret['number'] || '').replace(/ /g,'');
+    ret.number = (ret.number || '').replace(/ /g,'');
 
     return ret;
-  }
+  };
+
+  return {
+    mine: mine
+  };
 })
 .directive('stripeForm', ['$window', '$parse', 'Common', 'FormDataMiner', function($window, $parse, Common, FormDataMiner) {
     
@@ -59,16 +67,16 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expMonth ? true : false;
-        expYearUsed = scope.expYear ? true : false;
+        var expMonthUsed = scope.expMonth ? true : false;
+        var expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
           if (formValues.expiry && formValues.expiry.$modelValue) {
-            exp = Common.parseExpiry(formValues.expiry.$modelValue);
+            var exp = Common.parseExpiry(formValues.expiry.$modelValue);
             expiry = {
               expMonth: exp.month,
               expYear: exp.year
-            }
+            };
           }
         }
 
@@ -77,7 +85,7 @@ angular.module('angularPayments')
 
         if(form.hasClass('ng-valid')) {
           
-          $window.Stripe.createToken(FormDataMiner(scope[attr.name], expiry), function() {
+          $window.Stripe.createToken(FormDataMiner.mine(scope[attr.name], expiry), function() {
             var args = arguments;
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
@@ -98,7 +106,7 @@ angular.module('angularPayments')
 
       });
     }
-  }
+  };
 }])
 .directive('recurlyForm', ['$window', '$parse', 'FormDataMiner', 'Common', function($window, $parse, FormDataMiner, Common) {
   return {
@@ -116,16 +124,16 @@ angular.module('angularPayments')
 
         var expiry = {};
         // TODO: MOVE THIS
-        expMonthUsed = scope.expMonth ? true : false;
-        expYearUsed = scope.expYear ? true : false;
+        var expMonthUsed = scope.expMonth ? true : false;
+        var expYearUsed = scope.expYear ? true : false;
 
-        if(!(expMonthUsed && expYearUsed)){
+        if (!(expMonthUsed && expYearUsed)) {
           if (formValues.expiry && formValues.expiry.$modelValue) {
-            exp = Common.parseExpiry(formValues.expiry.$modelValue);
+            var exp = Common.parseExpiry(formValues.expiry.$modelValue);
             expiry = {
               expMonth: exp.month,
               expYear: exp.year
-            }
+            };
           }
         }
 
@@ -138,24 +146,26 @@ angular.module('angularPayments')
             scope[attr.recurlyForm].apply(scope, resp);
           });
           button.prop('disabled', false);
-        }
+        };
 
-        if(form.hasClass('ng-valid')) {
+        if (form.hasClass('ng-valid')) {
           
-          var obj = FormDataMiner(scope[attr.name], expiry, [
-            'first_name', 'last_name', 'cvv',
-            'description'
+          var obj = FormDataMiner.mine(scope[attr.name], expiry, [
+            'first_name', 'last_name', 'cvv','description'
           ]);
-          if (!obj.currency) obj.currency = 'USD';
+          
+          if (!obj.currency) {
+            obj.currency = 'USD';
+          }
 
-          var first_name, last_name, _ref,
-            __slice = [].slice;
+          var first_name, last_name, _ref;
+          var __slice = [].slice;
 
           if (obj.name) {
-            _name = obj.name.split(" ")
-            obj.first_name = _name[0]
-            obj.last_name = (2 <= _name.length) ? [].slice.call(_name, 1) : []
-            obj.last_name = obj.last_name.join(" ")
+            var _name = obj.name.split(" ");
+            obj.first_name = _name[0];
+            obj.last_name = (2 <= _name.length) ? [].slice.call(_name, 1) : [];
+            obj.last_name = obj.last_name.join(" ");
           }
 
           var recurlyFn, recurlyOptions;
@@ -173,7 +183,8 @@ angular.module('angularPayments')
               month: (obj.exp_month || '').toString(),
               year: (obj.exp_year || '').toString(),
               zip: obj.zip
-          }
+            }
+          };
 
           $window.recurly[recurlyFn](recurlyOptions, function(err, token) {
             if (err) {
@@ -184,7 +195,6 @@ angular.module('angularPayments')
             }
           });
 
-
         } else {
           doneFn([400, {error: 'Invalid form submitted.'}]);
         }
@@ -194,5 +204,5 @@ angular.module('angularPayments')
 
       });
     }
-  }
-}])
+  };
+}]);
