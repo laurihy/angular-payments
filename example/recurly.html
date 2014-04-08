@@ -24,18 +24,10 @@
     angular.module('app', ['angularPayments'])
 
     recurly.configure({
-      // publicKey: 'sc-XXXXXXXXXXXXXXXXXXXXXX'
-      publicKey: 'sc-TZu0FYzFTOzCfnS9QZSyuL'
+      publicKey: 'sc-XXXXXXXXXXXXXXXXXXXXXX'
     })
 
     MainController = function($scope){
-      $scope.payment = {
-        name: 'Ari Lerner',
-        number: '4111 1111 1111 1111',
-        expiry: '12/2025',
-        cvc: '123',
-        addressZip: '94110'
-      }
       $scope.handleRecurly = function(status, response){
         if(response.error) {
           console.error('GOT AN ERROR', response.error);
