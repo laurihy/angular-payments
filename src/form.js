@@ -80,8 +80,8 @@ angular.module('angularPayments')
           button.prop('disabled', false);
         }
 
-        scope.expiryMonth = expMonthUsed ? scope.expMonth : null;
-        scope.expiryYear = expYearUsed ? scope.expMonth : null;
+        scope.expMonth = expMonthUsed ? scope.expMonth : null;
+        scope.expYear = expYearUsed ? scope.expYear : null;
 
       });
     }
