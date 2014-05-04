@@ -23,7 +23,7 @@ angular.module('angularPayments')
     
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){
-        return "_"+m.toLowerCase();
+        return '_'+m.toLowerCase();
       });
     };
 
@@ -48,7 +48,7 @@ angular.module('angularPayments')
     mine: mine
   };
 })
-.directive('stripeForm', ['$window', '$parse', 'Common', 'FormDataMiner', function($window, $parse, Common, FormDataMiner) {
+.directive('stripeForm', ['$window', '$parse', '$rootScope', 'Common', 'FormDataMiner', function($window, $parse, $rootScope, Common, FormDataMiner) {
     
   // directive intercepts form-submission, obtains Stripe's cardToken using stripe.js
   // and then passes that to callback provided in stripeForm, attribute.
@@ -87,7 +87,7 @@ angular.module('angularPayments')
           
           $window.Stripe.createToken(FormDataMiner.mine(scope[attr.name], expiry), function() {
             var args = arguments;
-            scope.$apply(function() {
+            $rootScope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
             });
             button.prop('disabled', false);
@@ -95,7 +95,7 @@ angular.module('angularPayments')
           });
 
         } else {
-          scope.$apply(function() {
+          $rootScope.$apply(function() {
             scope[attr.stripeForm].apply(scope, [400, {error: 'Invalid form submitted.'}]);
           });
           button.prop('disabled', false);
@@ -108,7 +108,7 @@ angular.module('angularPayments')
     }
   };
 }])
-.directive('recurlyForm', ['$window', '$parse', 'FormDataMiner', 'Common', function($window, $parse, FormDataMiner, Common) {
+.directive('recurlyForm', ['$window', '$parse', '$rootScope', 'FormDataMiner', 'Common', function($window, $parse, $rootScope, FormDataMiner, Common) {
   return {
     restrict: 'A',
     link: function(scope, elem, attr) {
@@ -142,7 +142,7 @@ angular.module('angularPayments')
 
         // Function to be run when done
         var doneFn = function(resp) {
-          scope.$apply(function() {
+          $rootScope.$apply(function() {
             scope[attr.recurlyForm].apply(scope, resp);
           });
           button.prop('disabled', false);
@@ -162,10 +162,10 @@ angular.module('angularPayments')
           var __slice = [].slice;
 
           if (obj.name) {
-            var _name = obj.name.split(" ");
+            var _name = obj.name.split(' ');
             obj.first_name = _name[0];
             obj.last_name = (2 <= _name.length) ? [].slice.call(_name, 1) : [];
-            obj.last_name = obj.last_name.join(" ");
+            obj.last_name = obj.last_name.join(' ');
           }
 
           var recurlyFn, recurlyOptions;
