@@ -155,7 +155,7 @@ angular.module('angularPayments')
           // simply pass the form on to the submit() function, expecting
           // the rest of the app to handle associating payment info
           // in another manner
-          if (attr.useStoredBillingInfo && attr.useStoredBillingInfo === 'true') {
+          if (attr.useStoredBillingInfo && scope[attr.useStoredBillingInfo]) {
             doneFn({});
           } else {
             var expiry = {};

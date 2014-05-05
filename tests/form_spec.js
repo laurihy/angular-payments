@@ -125,7 +125,7 @@ describe('recurlyForm', function() {
       var newForm;
       beforeEach(inject(function($compile) {
         var tpl = elm;
-        elm.attr('use-stored-billing-info', 'true');
+        elm.attr('use-stored-billing-info', 'useStored');
         $compile(tpl)(scope);
         newForm = scope.myForm;
         btn = tpl.find('button')[0];
@@ -133,12 +133,13 @@ describe('recurlyForm', function() {
 
       it('should call through to the submit function', function() {
         spyOn(scope, 'handleRecurly');
+        scope.useStored = true;
         fillInForm({number: '4111111111111111'}, newForm);
         btn.click();
         scope.$digest();
         expect(scope.handleRecurly).toHaveBeenCalled();
       });
-      
+
     });
 
 
