@@ -12,7 +12,7 @@ angular.module('angularPayments')
           return true;
       }
       
-      if (typeof document !== "undefined" && document !== null ? (ref = document.selection) != null ? typeof ref.createRange === "function" ? ref.createRange().text : void 0 : void 0 : void 0) {
+      if (typeof document !== 'undefined' && document !== null ? (ref = document.selection) != null ? typeof ref.createRange === 'function' ? ref.createRange().text : void 0 : void 0 : void 0) {
           return true;
       }
       
@@ -238,11 +238,11 @@ angular.module('angularPayments')
     
     if (/^\d$/.test(val) && (val !== '0' && val !== '1')) {
       e.preventDefault();
-      return $target.val("0" + val + " / ");
+      return $target.val('0' + val + ' / ');
 
     } else if (/^\d\d$/.test(val)) {
       e.preventDefault();
-      return $target.val("" + val + " / ");
+      return $target.val('' + val + ' / ');
 
     }
   };
@@ -260,7 +260,7 @@ angular.module('angularPayments')
     val = $target.val();
     
     if (/^\d\d$/.test(val)) {
-      return $target.val("" + val + " / ");
+      return $target.val('' + val + ' / ');
     }
   };
 
@@ -277,7 +277,7 @@ angular.module('angularPayments')
     val = $target.val();
     
     if (/^\d$/.test(val) && val !== '0') {
-      return $target.val("0" + val + " / ");
+      return $target.val('0' + val + ' / ');
     }
   };
 
@@ -346,7 +346,7 @@ angular.module('angularPayments')
       types = Object.keys(_formats);
 
       errstr  = 'Unknown type for formatting: "'+type+'". ';
-      errstr += 'Should be one of: "'+types.join('", "')+'"';
+      errstr += 'Should be one of: "'+types.join('', '')+'"';
 
       throw errstr;
     }

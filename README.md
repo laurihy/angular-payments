@@ -131,6 +131,22 @@ And then:
 Basically the directive sends the credit card details directly to stripe, which then returns a token that you can use to charge the card, subscribe a user or to do other things. This ensures that the card details themselves never hit your backend and thus you have to worry a little bit less.
 
 
+## recurlyForm
+
+This directive intercepts the form submission and calls out to `recurly.js` using the `v3` API. It works similarly to the `stripeForm` directive and makes the request to recurly to get the one-time use token:
+
+		<form recurly-form="CALLBACK"> 
+		...
+		</form>
+
+Instead of making the request to recurly, this directive will fetch the appropriate data from the form and make the request to recurly to get the token. Once this token has been retrieved from recurly, it will call the `CALLBACK` function passed in through the directive.
+
+This directive uses credit card processing by default, BUT it also includes an option for using paypal. To use paypal instead of credit cards, simply add the `paypal` attribute to the `recurlyForm`:
+
+		<form recurly-form="CALLBACK" paypal> 
+		...
+		</form>
+
 ## Example
 
 See example-folder. You can run the example with
