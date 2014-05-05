@@ -150,13 +150,31 @@ angular.module('angularPayments')
 
         if (form.hasClass('ng-valid')) {
 
+          var obj = FormDataMiner.mine(scope[attr.name], expiry, [
+            'first_name', 'last_name', 'cvv','description'
+          ]);
+          
+          if (!obj.currency) {
+            obj.currency = 'USD';
+          }
+
+          var first_name, last_name, _ref;
+          var __slice = [].slice;
+
+          if (obj.name) {
+            var _name = obj.name.split(' ');
+            obj.first_name = _name[0];
+            obj.last_name = (2 <= _name.length) ? [].slice.call(_name, 1) : [];
+            obj.last_name = obj.last_name.join(' ');
+          }
+
           // Check if the form has the option set as true to use
           // storedBillingInfo. Essentially, this is an option to 
           // simply pass the form on to the submit() function, expecting
           // the rest of the app to handle associating payment info
           // in another manner
           if (attr.useStoredBillingInfo && scope[attr.useStoredBillingInfo]) {
-            doneFn({});
+            doneFn(obj);
           } else {
             var expiry = {};
             // TODO: MOVE THIS
@@ -171,24 +189,6 @@ angular.module('angularPayments')
                   expYear: exp.year
                 };
               }
-            }
-          
-            var obj = FormDataMiner.mine(scope[attr.name], expiry, [
-              'first_name', 'last_name', 'cvv','description'
-            ]);
-            
-            if (!obj.currency) {
-              obj.currency = 'USD';
-            }
-
-            var first_name, last_name, _ref;
-            var __slice = [].slice;
-
-            if (obj.name) {
-              var _name = obj.name.split(' ');
-              obj.first_name = _name[0];
-              obj.last_name = (2 <= _name.length) ? [].slice.call(_name, 1) : [];
-              obj.last_name = obj.last_name.join(' ');
             }
 
             var recurlyFn, recurlyOptions;
