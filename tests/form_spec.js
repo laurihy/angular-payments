@@ -37,6 +37,7 @@ describe('recurlyForm', function() {
         <label for="">Name on card </label>                 \
         <input type="text"                                  \
             name="name"                                     \
+            payments-validate="full_name"                   \
             ng-model="payment.name" />                      \
         <label for="">CVC</label>                           \
         <input type="text"                                  \
