@@ -142,7 +142,15 @@ angular.module('angularPayments')
     expiry.setMonth(expiry.getMonth() + 1, 1);
 
     return expiry > currentTime;
-  }
+  };
+
+  _validators['full_name'] = function(val) {
+    // A name is valid if and only if 
+    // it has a space between 
+    if (val == null || val.length === 0) return true;
+
+    return /^(.*)+[ ](.*)+$/.test(val);
+  };
 
   return function(type, val, ctrl, scope, attr){
     if(!_validators[type]){

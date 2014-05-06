@@ -5,6 +5,7 @@
   "authors": [
     "Lauri Hynynen <@laurihy>"
   ],
+  "main": "lib/angular-payments.js",
   "description": "Directive for formatting and validating credit card forms",
   "keywords": [
     "stripe",
@@ -22,5 +23,9 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular": "~1.2.16",
+    "angular-mocks": "~1.2.16"
+  }
 }
