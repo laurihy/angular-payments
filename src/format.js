@@ -3,7 +3,7 @@ angular.module('angularPayments')
 
 .factory('_Format',['Cards', 'Common', '$filter', function(Cards, Common, $filter){
 
-  var _formats = {}
+  var _formats = {};
 
   var _hasTextSelected = function($target) {
       var ref;
@@ -169,7 +169,7 @@ angular.module('angularPayments')
 
     ctrl.$parsers.push(_parseCardNumber);
     ctrl.$formatters.push(_getFormattedCardNumber);
-  }
+  };
 
 
   // cvc
@@ -191,11 +191,11 @@ angular.module('angularPayments')
       e.preventDefault();
       return;
     }
-  }
+  };
 
   _formats['cvc'] = function(elem){
-    elem.bind('keypress', _formatCVC)
-  }
+    elem.bind('keypress', _formatCVC);
+  };
 
   // expiry
 
@@ -218,7 +218,7 @@ angular.module('angularPayments')
     value = value.replace(/\D/g, '');
     
     if (value.length > 6) {
-      e.preventDefault()
+      e.preventDefault();
       return;
     }
   };
@@ -338,7 +338,7 @@ angular.module('angularPayments')
 
     ctrl.$parsers.push(_parseExpiry);
     ctrl.$formatters.push(_getFormattedExpiry);
-  }
+  };
 
   return function(type, elem, ctrl){
     if(!_formats[type]){
@@ -351,7 +351,7 @@ angular.module('angularPayments')
       throw errstr;
     }
     return _formats[type](elem, ctrl);
-  }
+  };
 
 }])
 
@@ -362,5 +362,5 @@ angular.module('angularPayments')
       link: function(scope, elem, attr, ctrl){
         _Format(attr.paymentsFormat, elem, ctrl);
       }
-    }
-}])
+    };
+}]);
