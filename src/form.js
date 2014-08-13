@@ -16,13 +16,13 @@ angular.module('angularPayments')
                     'cvc', 'name','addressLine1', 
                     'addressLine2', 'addressCity',
                     'addressState', 'addressZip',
-                    'addressCountry']
+                    'addressCountry'];
     
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){
         return "_"+m.toLowerCase();
       });
-    }
+    };
 
     var ret = {};
 
@@ -35,7 +35,7 @@ angular.module('angularPayments')
     ret['number'] = (ret['number'] || '').replace(/ /g,'');
 
     return ret;
-  }
+  };
 
   return {
     restrict: 'A',
@@ -53,9 +53,9 @@ angular.module('angularPayments')
         expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
+          exp = Common.parseExpiry(scope.expiry);
+          scope.expMonth = exp.month;
+          scope.expYear = exp.year;
         }
 
         var button = form.find('button');
@@ -85,5 +85,5 @@ angular.module('angularPayments')
 
       });
     }
-  }
-}])
+  };
+}]);
