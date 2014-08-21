@@ -1,7 +1,7 @@
 angular.module('angularPayments')
 
 .directive('stripeForm', ['$window', '$parse', 'Common', function($window, $parse, Common) {
-    
+
   // directive intercepts form-submission, obtains Stripe's cardToken using stripe.js
   // and then passes that to callback provided in stripeForm, attribute.
 
@@ -11,13 +11,13 @@ angular.module('angularPayments')
 
   // filter valid stripe-values from scope and convert them from camelCase to snake_case
   _getDataToSend = function(data){
-           
-    var possibleKeys = ['number', 'expMonth', 'expYear', 
-                    'cvc', 'name','addressLine1', 
+
+    var possibleKeys = ['number', 'expMonth', 'expYear',
+                    'cvc', 'name','addressLine1',
                     'addressLine2', 'addressCity',
                     'addressState', 'addressZip',
                     'addressCountry']
-    
+
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){
         return "_"+m.toLowerCase();
@@ -49,20 +49,15 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expMonth ? true : false;
-        expYearUsed = scope.expYear ? true : false;
-
-        if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
-        }
+        exp = Common.parseExpiry(scope.expiry)
+        scope.expMonth = exp.month
+        scope.expYear = exp.year
 
         var button = form.find('button');
         button.prop('disabled', true);
 
         if(form.hasClass('ng-valid')) {
-          
+
 
           $window.Stripe.createToken(_getDataToSend(scope), function() {
             var args = arguments;
@@ -74,14 +69,18 @@ angular.module('angularPayments')
           });
 
         } else {
+          var errorItem = [];
+          if (form.hasClass('ng-invalid-card')) errorItem.push('Credit Card');
+          if (form.hasClass('ng-invalid-expiry')) errorItem.push('Expiry');
+          if (form.hasClass('ng-invalid-cvc')) errorItem.push('CVC');
+          if (form.hasClass('ng-invalid-required')) errorItem.push('Missing required fields');
+          var errorMessage = 'Invalid form submitted: ' + errorItem.join(', ');
+
           scope.$apply(function() {
-            scope[attr.stripeForm].apply(scope, [400, {error: 'Invalid form submitted.'}]);
+            scope[attr.stripeForm].apply(scope, [400, {error: errorMessage }]);
           });
           button.prop('disabled', false);
         }
-
-        scope.expiryMonth = expMonthUsed ? scope.expMonth : null;
-        scope.expiryYear = expYearUsed ? scope.expMonth : null;
 
       });
     }
