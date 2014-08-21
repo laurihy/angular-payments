@@ -49,14 +49,9 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expMonth ? true : false;
-        expYearUsed = scope.expYear ? true : false;
-
-        if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
-        }
+        exp = Common.parseExpiry(scope.expiry)
+        scope.expMonth = exp.month
+        scope.expYear = exp.year
 
         var button = form.find('button');
         button.prop('disabled', true);
@@ -79,9 +74,6 @@ angular.module('angularPayments')
           });
           button.prop('disabled', false);
         }
-
-        scope.expiryMonth = expMonthUsed ? scope.expMonth : null;
-        scope.expiryYear = expYearUsed ? scope.expMonth : null;
 
       });
     }
