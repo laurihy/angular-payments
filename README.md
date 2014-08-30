@@ -164,6 +164,20 @@ And then:
 
 Basically the directive sends the credit card details directly to stripe, which then returns a token that you can use to charge the card, subscribe a user or to do other things. This ensures that the card details themselves never hit your backend and thus you have to worry a little bit less.
 
+### Configuration
+
+To configure the available cart types (if your payment gateway doesn't support all) you can do so with the following where `myApp' is your angular module. 
+
+The default value is ['amex', 'dinersclub', 'discover', 'jcb', 'maestro', 'mastercard', 'unionpay', 'visa']
+
+	myApp.run(['angularPaymentsOptions', 
+		function(angularPaymentsOptions) {
+			angularPaymentsOptions.enabledCardTypes = ['visa', 'mastercard', 'amex'];
+		}
+	]);
+
+
+
 
 ## Example
 

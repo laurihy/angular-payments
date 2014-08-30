@@ -1,11 +1,11 @@
 angular.module('angularPayments')
 
-.factory('Cards', [function(){
+.factory('Cards', ['angularPaymentsOptions', '$filter', function(angularPaymentsOptions, $filter){
 
   var defaultFormat = /(\d{1,4})/g;
   var defaultInputFormat =  /(?:^|\s)(\d{4})$/;
 
-        var cards = [
+  var cardDefinitions = [
     {
       type: 'maestro',
       pattern: /^(5018|5020|5038|6304|6759|676[1-3])/,
@@ -81,6 +81,9 @@ angular.module('angularPayments')
     }
   ];
 
+  var cards = $filter('filter')(cardDefinitions, function(card) {
+    return angularPaymentsOptions.enabledCardTypes.indexOf(card.type) > -1;
+  });
 
   var _fromNumber = function(num){
       var card, i, len;
