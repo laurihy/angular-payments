@@ -5,6 +5,7 @@
   "authors": [
     "Lauri Hynynen <@laurihy>"
   ],
+  "main": "lib/angular-payments.js",
   "description": "Directive for formatting and validating credit card forms",
   "keywords": [
     "stripe",
