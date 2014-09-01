@@ -9,7 +9,7 @@ angular.module('angularPayments')
   ret['parseExpiry'] = function(value){
     var month, prefix, year, _ref;
 
-    value = value || ''
+    value = value || '';
 
     value = value.replace(/\s/g, '');
     _ref = value.split('/', 2), month = _ref[0], year = _ref[1];
@@ -27,8 +27,8 @@ angular.module('angularPayments')
       month: month,
       year: year
     };
-  }
+  };
 
   return ret;
 
-}])
+}]);

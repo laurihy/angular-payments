@@ -96,7 +96,7 @@ angular.module('angularPayments')
         }
 
       }
-  }
+  };
 
   var _fromType = function(type) {
       var card, i, len;
@@ -113,10 +113,10 @@ angular.module('angularPayments')
   };
 
   return {
-      fromNumber: function(val) { return _fromNumber(val) },
-      fromType: function(val) { return _fromType(val) },
+      fromNumber: function(val) { return _fromNumber(val); },
+      fromType: function(val) { return _fromType(val); },
       defaultFormat: function() { return defaultFormat;},
       defaultInputFormat: function() { return defaultInputFormat;}
-  }
+  };
 
-}])
+}]);
