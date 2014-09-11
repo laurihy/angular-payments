@@ -72,6 +72,7 @@ angular.module('angularPayments')
       digit = String.fromCharCode(e.which);
       
       if(!/^\d+$/.test(digit)) {
+        e.preventDefault();
         return;
       }
       
