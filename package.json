@@ -7,6 +7,7 @@
     "name": "Lauri Hynynen",
     "url": "https://github.com/laurihy"
   },
+  "main": "lib/angular-payments.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/laurihy/angular-payments.git"
