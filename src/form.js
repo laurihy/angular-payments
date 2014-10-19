@@ -53,9 +53,6 @@ angular.module('angularPayments')
         scope.expMonth = exp.month
         scope.expYear = exp.year
 
-        var button = form.find('button');
-        button.prop('disabled', true);
-
         if(form.hasClass('ng-valid')) {
 
 
@@ -64,8 +61,6 @@ angular.module('angularPayments')
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
             });
-            button.prop('disabled', false);
-
           });
 
         } else {
@@ -79,7 +74,6 @@ angular.module('angularPayments')
           scope.$apply(function() {
             scope[attr.stripeForm].apply(scope, [400, {error: errorMessage }]);
           });
-          button.prop('disabled', false);
         }
 
       });
