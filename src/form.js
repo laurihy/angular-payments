@@ -46,21 +46,28 @@ angular.module('angularPayments')
       }
 
       var form = angular.element(elem);
+      var isProcessing = false;
 
       form.bind('submit', function() {
+        if (isProcessing === true) return;
 
         exp = Common.parseExpiry(scope.expiry)
         scope.expMonth = exp.month
         scope.expYear = exp.year
 
-        if(form.hasClass('ng-valid')) {
+        var button = form.find('button');
+        button.prop('disabled', true);
+        isProcessing = true;
 
+        if(form.hasClass('ng-valid')) {
 
           $window.Stripe.createToken(_getDataToSend(scope), function() {
             var args = arguments;
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
             });
+            button.prop('disabled', false);
+            isProcessing = false;
           });
 
         } else {
@@ -74,6 +81,8 @@ angular.module('angularPayments')
           scope.$apply(function() {
             scope[attr.stripeForm].apply(scope, [400, {error: errorMessage }]);
           });
+          button.prop('disabled', false);
+          isProcessing = false;
         }
 
       });
