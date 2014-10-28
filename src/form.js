@@ -56,7 +56,12 @@ angular.module('angularPayments')
         scope.expYear = exp.year
 
         var button = form.find('button');
-        button.prop('disabled', true);
+        // btn-auto-disabled
+        // 0: disable button, 1: do not disable button, 2: keep disable
+        var autoDisable = ~~button.attr('btn-auto-disabled');
+        if (autoDisable === 0 && autoDisable === 2) {
+            button.prop('disabled', true);
+        }
         isProcessing = true;
 
         if(form.hasClass('ng-valid')) {
@@ -66,7 +71,9 @@ angular.module('angularPayments')
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
             });
-            button.prop('disabled', false);
+            if (autoDisable === 0) {
+                button.prop('disabled', false);
+            }
             isProcessing = false;
           });
 
@@ -81,7 +88,9 @@ angular.module('angularPayments')
           scope.$apply(function() {
             scope[attr.stripeForm].apply(scope, [400, {error: errorMessage }]);
           });
-          button.prop('disabled', false);
+          if (autoDisable === 0) {
+              button.prop('disabled', false);
+          }
           isProcessing = false;
         }
 

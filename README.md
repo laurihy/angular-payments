@@ -130,6 +130,15 @@ And then:
 
 Basically the directive sends the credit card details directly to stripe, which then returns a token that you can use to charge the card, subscribe a user or to do other things. This ensures that the card details themselves never hit your backend and thus you have to worry a little bit less.
 
+### flexible submit button
+
+In default behavior, submit button will disable during request submit and enable again after finish. Although sometimes user might need more flexible action, like turn off or disable but not enable after stripe return. So try to add new attribute to control submit button disable timing.
+
+<button btn-auto-disabled="{0,1,2}">
+
+* 0: Just use the default behavior, if user did not assign `btn-auto-disabled` would become this option too.
+* 1: Do not disable submit button.
+* 2: Disable button when user click but did not enable it.
 
 ## Example
 
