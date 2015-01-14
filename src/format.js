@@ -31,6 +31,11 @@ angular.module('angularPayments')
       length = (value.replace(/\D/g, '') + digit).length;
       
       upperLength = 16;
+
+      // Catch delete, tab, backspace, arrows, etc..
+      if (e.which === 8 || e.which === 0) {
+        return;
+      }
       
       if (card) {
         upperLength = card.length[card.length.length - 1];
@@ -177,6 +182,11 @@ angular.module('angularPayments')
   _formatCVC = function(e){
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
+
+    // Catch delete, tab, backspace, arrows, etc..
+    if (e.which === 8 || e.which === 0) {
+      return;
+    }
     
     if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
       e.preventDefault();
