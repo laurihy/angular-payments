@@ -31,6 +31,11 @@ angular.module('angularPayments')
       length = (value.replace(/\D/g, '') + digit).length;
       
       upperLength = 16;
+
+      // Catch delete, tab, backspace, arrows, etc..
+      if (e.which === 8 || e.which === 0) {
+        return;
+      }
       
       if (card) {
         upperLength = card.length[card.length.length - 1];
@@ -40,7 +45,7 @@ angular.module('angularPayments')
         return;
       }
 
-      if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+      if (!/^\d+$/.test(digit) && !e.metaKey && e.keyCode >= 46) {
         e.preventDefault();
         return;
       }
@@ -111,7 +116,7 @@ angular.module('angularPayments')
         return;
       }
       
-      if(/\d\s$/.test(value) && !e.meta && e.keyCode >= 46) {
+      if(/\d\s$/.test(value) && !e.metaKey && e.keyCode >= 46) {
         e.preventDefault();
         return $target.val(value.replace(/\d\s$/, ''));
       } else if (/\s\d?$/.test(value)) {
@@ -175,26 +180,50 @@ angular.module('angularPayments')
   // cvc
 
   _formatCVC = function(e){
+    var $target, digit, value
+
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
-    
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    value = $target.val()
+
+    // Is control character (arrow keys, delete, enter, etc...)
+    function isSystemKey(code) {
+      return code === 8 || code === 0 || code === 13
+    }
+
+    // Allow normal system keys to work
+    if (isSystemKey(e.which) || e.metaKey) {
+      return
+    }
+
+    // Prevent entering non-digit characters
+    if (!/\d+$/.test(digit)) {
       e.preventDefault();
       return;
     }
 
-    val = $target.val() + digit;
-    
-    if(val.length <= 4){
-      return;
-    } else {
-      e.preventDefault();
-      return;
+    // Prevent entering more than 4 characters unless you have selected text
+    if ((value + digit).length > 4 && ! _hasTextSelected($target)) {
+      e.preventDefault()
+      return
     }
+  }
+
+  _pasteCVC = function(e) {
+    return setTimeout(function() {
+      var $target, value;
+      $target = angular.element(e.target);
+
+      value = $target.val();
+      value = value.replace(/[^\d]/g, '').substring(0, 4)
+
+      return $target.val(value);
+    });
   }
 
   _formats['cvc'] = function(elem){
     elem.bind('keypress', _formatCVC)
+    elem.bind('paste', _pasteCVC)
   }
 
   // expiry
@@ -205,7 +234,7 @@ angular.module('angularPayments')
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (!/^\d+$/.test(digit) && !e.metaKey && e.keyCode >= 46) {
       e.preventDefault();
       return;
     }
@@ -228,7 +257,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (!/^\d+$/.test(digit) && !e.metaKey && e.keyCode >= 46) {
       e.preventDefault();
       return;
     }
@@ -252,7 +281,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (!/^\d+$/.test(digit) && !e.metaKey && e.keyCode >= 46) {
       return;
     }
     
