@@ -80,9 +80,6 @@ angular.module('angularPayments')
           button.prop('disabled', false);
         }
 
-        scope.expMonth = null;
-        scope.expYear  = null;
-
       });
     }
   }
