@@ -27,7 +27,7 @@ angular.module('angularPayments')
     var ret = {};
 
     for(i in possibleKeys){
-        if(possibleKeys.hasOwnProperty(i)){
+        if(data.hasOwnProperty(possibleKeys[i])){
             ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
         }
     }
@@ -86,4 +86,4 @@ angular.module('angularPayments')
       });
     }
   }
-}])
+}]);
