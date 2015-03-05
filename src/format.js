@@ -174,7 +174,9 @@ angular.module('angularPayments')
 
   // cvc
 
-  _formatCVC = function(e){
+  var _formatCVC = function(e){
+    var $target, digit, val;
+
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
@@ -199,7 +201,7 @@ angular.module('angularPayments')
 
   // expiry
 
-  _restrictExpiry = function(e) {
+  var _restrictExpiry = function(e) {
     var $target, digit, value;
     
     $target = angular.element(e.currentTarget);
@@ -223,7 +225,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatExpiry = function(e) {
+  var _formatExpiry = function(e) {
     var $target, digit, val;
     
     digit = String.fromCharCode(e.which);
@@ -247,7 +249,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatForwardExpiry = function(e) {
+  var _formatForwardExpiry = function(e) {
     var $target, digit, val;
     
     digit = String.fromCharCode(e.which);
@@ -264,7 +266,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatForwardSlash = function(e) {
+  var _formatForwardSlash = function(e) {
     var $target, slash, val;
     
     slash = String.fromCharCode(e.which);
@@ -281,7 +283,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatBackExpiry = function(e) {
+  var _formatBackExpiry = function(e) {
     var $target, value;
     
     if (e.meta) {
@@ -341,6 +343,8 @@ angular.module('angularPayments')
   }
 
   return function(type, elem, ctrl){
+    var types, errstr;
+
     if(!_formats[type]){
 
       types = Object.keys(_formats);
