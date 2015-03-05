@@ -59,7 +59,7 @@ angular.module('angularPayments')
   }
 
   _validators['card'] = function(num, ctrl, scope, attr){
-      var card, ref, typeModel;
+      var card, ref, typeModel, ret;
 
       if(attr.paymentsTypeModel) {
           typeModel = $parse(attr.paymentsTypeModel);
@@ -104,6 +104,8 @@ angular.module('angularPayments')
   }
 
   _validators['expiry'] = function(val){
+    var obj, month, year;
+
     // valid if empty - let ng-required handle empty
     if(val == null || val.length == 0) return true;
 
@@ -145,6 +147,8 @@ angular.module('angularPayments')
   }
 
   return function(type, val, ctrl, scope, attr){
+    var types, errstr;
+
     if(!_validators[type]){
 
       types = Object.keys(_validators);
