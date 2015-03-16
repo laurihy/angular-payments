@@ -65,11 +65,11 @@ angular.module('angularPayments')
           
 
           $window.Stripe.createToken(_getDataToSend(scope), function() {
+            button.prop('disabled', false);
             var args = arguments;
             scope.$apply(function() {
               scope[attr.stripeForm].apply(scope, args);
             });
-            button.prop('disabled', false);
 
           });
 
