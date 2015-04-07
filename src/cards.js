@@ -68,7 +68,7 @@ angular.module('angularPayments')
       format: /(\d{1,4})(\d{1,6})?(\d{1,5})?/,
       inputFormat: /^(\d{4}|\d{4}\s\d{6})$/,
       length: [15],
-      cvcLength: [3, 4],
+      cvcLength: [4],
       luhn: true
     }, {
       type: 'visa',
