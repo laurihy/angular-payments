@@ -57,11 +57,11 @@ angular.module('angularPayments')
         scope.expMonth = exp.month
         scope.expYear = exp.year
 
-        var button = form.find('button');
+        var button = form.find('button[type=submit]');
         // btn-auto-disabled
         // 0: disable button, 1: do not disable button, 2: keep disable
         var autoDisable = ~~button.attr('btn-auto-disabled');
-        if (autoDisable === 0 && autoDisable === 2) {
+        if (autoDisable === 0 || autoDisable === 2) {
             button.prop('disabled', true);
         }
         isProcessing = true;
