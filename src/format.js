@@ -14,7 +14,7 @@ angular.module('angularPayments')
           return true;
       }
       
-      if (typeof document !== "undefined" && document !== null ? (ref = document.selection) !== null ? typeof ref.createRange === "function" ? ref.createRange().text : void 0 : void 0 : void 0) {
+      if (document.selection) {
           return true;
       }
       
