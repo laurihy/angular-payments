@@ -1,12 +1,17 @@
 {
   "name": "angular-payments",
   "description": "Directive for formatting and validating credit card forms",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/laurihy/angular-payments",
   "author": {
     "name": "Lauri Hynynen",
     "url": "https://github.com/laurihy"
   },
+  "contributors": [{
+    "name": "Brian Zhang",
+    "email": "z@zumper.com",
+    "url": "https://github.com/atav32"
+  }],
   "main": "lib/angular-payments.js",
   "repository": {
     "type": "git",
