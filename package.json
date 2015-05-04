@@ -1,7 +1,7 @@
 {
   "name": "angular-payments",
   "description": "Directive for formatting and validating credit card forms",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "homepage": "https://github.com/laurihy/angular-payments",
   "author": {
     "name": "Lauri Hynynen",

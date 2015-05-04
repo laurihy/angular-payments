@@ -23,6 +23,11 @@ angular.module('angularPayments')
 
   // card formatting
 
+  var isInvalidKey = function(e) {
+    var digit = String.fromCharCode(e.which);
+    return !/^\d+$/.test(digit) && !e.metaKey && e.charCode !== 0 && !e.ctrlKey;
+  };
+
   var _formatCardNumber = function(e) {
       var $target, card, digit, length, re, upperLength, value;
       
@@ -33,16 +38,18 @@ angular.module('angularPayments')
       length = (value.replace(/\D/g, '') + digit).length;
       
       upperLength = 16;
-      
+
+      // Catch delete, tab, backspace, arrows, etc..
+      if (e.which === 8 || e.which === 0) {
+        return;
+      }
+
       if (card) {
         upperLength = card.length[card.length.length - 1];
       }
       
-      if (length >= upperLength) {
-        return;
-      }
 
-      if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+      if (isInvalidKey(e)) {
         e.preventDefault();
         return;
       }
@@ -54,6 +61,10 @@ angular.module('angularPayments')
       re = Cards.defaultInputFormat();
       if (card) {
           re = card.inputFormat;
+      }
+
+      if (length >= upperLength) {
+        return;
       }
 
       if (re.test(value)) {
@@ -72,6 +83,11 @@ angular.module('angularPayments')
       $target = angular.element(e.currentTarget);
       digit = String.fromCharCode(e.which);
       
+      // Catch delete, tab, backspace, arrows, etc..
+      if (e.which === 8 || e.which === 0) {
+        return;
+      }
+
       if(!/^\d+$/.test(digit)) {
         e.preventDefault();
         return;
@@ -101,7 +117,7 @@ angular.module('angularPayments')
       $target = angular.element(e.currentTarget);
       value = $target.val();
       
-      if(e.meta) {
+      if(e.metaKey) {
         return;
       }
       
@@ -113,7 +129,7 @@ angular.module('angularPayments')
         return;
       }
       
-      if(/\d\s$/.test(value) && !e.meta && e.keyCode >= 46) {
+      if(/\d\s$/.test(value) && !e.metaKey && e.keyCode >= 46) {
         e.preventDefault();
         return $target.val(value.replace(/\d\s$/, ''));
       } else if (/\s\d?$/.test(value)) {
@@ -181,9 +197,18 @@ angular.module('angularPayments')
 
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
-    
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+
+    // Catch delete, tab, backspace, arrows, etc..
+    if (e.which === 8 || e.which === 0) {
+      return;
+    }
+
+    if (isInvalidKey(e)) {
       e.preventDefault();
+      return;
+    }
+
+    if(_hasTextSelected($target)) {
       return;
     }
 
@@ -201,6 +226,7 @@ angular.module('angularPayments')
     elem.bind('keypress', _formatCVC);
   };
 
+
   // expiry
 
   var _restrictExpiry = function(e) {
@@ -209,7 +235,7 @@ angular.module('angularPayments')
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (isInvalidKey(e)) {
       e.preventDefault();
       return;
     }
@@ -232,7 +258,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (isInvalidKey(e)) {
       e.preventDefault();
       return;
     }
@@ -256,7 +282,7 @@ angular.module('angularPayments')
     
     digit = String.fromCharCode(e.which);
     
-    if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
+    if (isInvalidKey(e)) {
       return;
     }
     
@@ -288,7 +314,7 @@ angular.module('angularPayments')
   var _formatBackExpiry = function(e) {
     var $target, value;
     
-    if (e.meta) {
+    if (e.meta || e.metaKey) {
       return;
     }
     
