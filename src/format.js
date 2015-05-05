@@ -176,7 +176,7 @@ angular.module('angularPayments')
   };
 
   var _parseCardNumber = function(value) {
-    return value !== null ? value.replace(/\s/g, '') : value;
+    return value !== null && value !== undefined ? value.replace(/\s/g, '') : value;
   };
 
   _formats.card = function(elem, ctrl){

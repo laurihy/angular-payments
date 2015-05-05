@@ -20,6 +20,11 @@ module.exports = function(grunt) {
         dest: 'lib/<%= pkg.name %>.js'
       }
     },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
+      }
+    },
     jshint: {
       options: {
         jshintrc: './.jshintrc'
@@ -55,7 +60,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-karma');
 
   grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
-
 };

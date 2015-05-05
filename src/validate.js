@@ -115,7 +115,7 @@ angular.module('angularPayments')
   _validators.expiry = function(val){
     var month, year, obj;
     // valid if empty - let ng-required handle empty
-    if(val === null || val.length === 0) return true;
+    if(!val) return true;
 
     obj = Common.parseExpiry(val);
 
