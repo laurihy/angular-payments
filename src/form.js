@@ -30,7 +30,7 @@ angular.module('angularPayments')
       if(data.hasOwnProperty(camelToSnake(possibleKeys[i]))){
           ret[camelToSnake(possibleKeys[i])] = angular.copy(data[camelToSnake(possibleKeys[i])]);
       } else if(data.hasOwnProperty(possibleKeys[i])) {
-        ret[possibleKeys[i]] = angular.copy(data[possibleKeys[i]]);
+        ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
       }
     }
 
