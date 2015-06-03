@@ -1,12 +1,17 @@
 {
   "name": "angular-payments",
   "description": "Directive for formatting and validating credit card forms",
-  "version": "0.1.0",
+  "version": "1.0.6",
   "homepage": "https://github.com/laurihy/angular-payments",
   "author": {
     "name": "Lauri Hynynen",
     "url": "https://github.com/laurihy"
   },
+  "contributors": [{
+    "name": "Brian Zhang",
+    "email": "z@zumper.com",
+    "url": "https://github.com/atav32"
+  }],
   "main": "lib/angular-payments.js",
   "repository": {
     "type": "git",
@@ -21,8 +26,15 @@
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-cli": "~0.1.7",
-    "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-concat": "~0.2.0",
-    "grunt-contrib-connect": "~0.5.0"
+    "grunt-contrib-connect": "~0.5.0",
+    "grunt-contrib-jshint": "^0.11.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-karma": "~0.10.1",
+    "karma": "~0.12",
+    "karma-chrome-launcher": "~0.1",
+    "karma-firefox-launcher": "~0.1",
+    "karma-jasmine": "~0.3.5",
+    "karma-coverage": "~0.1"
   }
 }

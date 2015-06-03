@@ -1,5 +1,14 @@
 module.exports = function(grunt) {
 
+  var config = {
+    jsSrc: ['src/module.js', 
+            'src/common.js',
+            'src/cards.js',
+            'src/format.js',
+            'src/validate.js',
+            'src/form.js']
+  };
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
@@ -7,13 +16,23 @@ module.exports = function(grunt) {
         separator: ';'
       },
       dist: {
-        src: ['src/module.js', 
-              'src/common.js',
-              'src/cards.js',
-              'src/format.js',
-              'src/validate.js',
-              'src/form.js'],
+        src: config.jsSrc,
         dest: 'lib/<%= pkg.name %>.js'
+      }
+    },
+    karma: {
+      unit: {
+        configFile: 'karma.conf.js'
+      }
+    },
+    jshint: {
+      options: {
+        jshintrc: './.jshintrc'
+      },
+      dist: {
+        files: {
+          src: config.jsSrc
+        }
       }
     },
     uglify: {
@@ -40,7 +59,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['concat', 'uglify']);
-
+  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'karma']);
 };

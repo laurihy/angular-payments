@@ -2,6 +2,8 @@
 
 An Angular Module that provides directives for *formatting* and *validating* forms related to payments. Also, it ships with a directive that makes it easy to integrate with Stripe's wonderful stripe.js.
 
+![animated example of using Angular Payments](example/example.gif)
+
 ### Credits
 
 This library wasn't just heavily inspired by Stripe's jQuery.payments, but is in fact mostly just a port of it to a more AngularJS-oriented style.
