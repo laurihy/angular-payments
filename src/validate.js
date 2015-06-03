@@ -172,24 +172,24 @@ angular.module('angularPayments')
 
 .factory('_ValidateWatch', ['_Validate', function(_Validate){
 
-    var _validatorWatches = {};
+  var _validatorWatches = {};
 
-    _validatorWatches.cvc = function(type, ctrl, scope, attr){
-        if(attr.paymentsTypeModel) {
-            scope.$watch(attr.paymentsTypeModel, function(newVal, oldVal) {
-                if(newVal !== oldVal) {
-                    var valid = _Validate(type, ctrl.$modelValue, ctrl, scope, attr);
-                    ctrl.$setValidity(type, valid);
-                }
-            });
+  _validatorWatches.cvc = function(type, ctrl, scope, attr){
+    if(attr.paymentsTypeModel) {
+      scope.$watch(attr.paymentsTypeModel, function(newVal, oldVal) {
+        if(newVal !== oldVal) {
+          var valid = _Validate(type, ctrl.$modelValue, ctrl, scope, attr);
+          ctrl.$setValidity(type, valid);
         }
-    };
+      });
+    }
+  };
 
-    return function(type, ctrl, scope, attr){
-        if(_validatorWatches[type]){
-            return _validatorWatches[type](type, ctrl, scope, attr);
-        }
-    };
+  return function(type, ctrl, scope, attr){
+    if(_validatorWatches[type]){
+      return _validatorWatches[type](type, ctrl, scope, attr);
+    }
+  };
 }])
 
 .directive('paymentsValidate', ['$window', '_Validate', '_ValidateWatch', function($window, _Validate, _ValidateWatch){
@@ -210,6 +210,26 @@ angular.module('angularPayments')
 
       ctrl.$formatters.push(validateFn);
       ctrl.$parsers.push(validateFn);
+
+    }
+  };
+}])
+
+.directive('paymentsLength', [function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elem, attr, modelCtrl) {
+      modelCtrl.$parsers.push(function validateLength(value) {
+        if (attr.paymentsLength === 'card') {
+          var rawNumber = '';
+          var minlength = scope.type === 'amex' ? 15 : 16;
+          if (modelCtrl.$viewValue) {
+            rawNumber = modelCtrl.$viewValue.replace(/\s/g, '');
+          }
+          modelCtrl.$setValidity('length', rawNumber.length >= minlength);
+        }
+        return value;
+      });
     }
   };
 }]);

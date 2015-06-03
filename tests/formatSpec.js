@@ -7,8 +7,17 @@ describe('Format', function() {
   beforeEach(module('angularPayments'));
 
   beforeEach(module('angularPayments', function($provide) {
-    mockCards = {};
-    mockCommon = {};
+    mockCards = {
+      fromNumber: function() {}
+    };
+    mockCommon = {
+      parseExpiry: function() {
+        return {
+          month: null,
+          year: null
+        };
+      }
+    };
     $provide.value('Cards', mockCards);
     $provide.value('Common', mockCommon);
   }));
