@@ -78,6 +78,22 @@ angular.module('angularPayments')
       length: [13, 14, 15, 16],
       cvcLength: [3],
       luhn: true
+    }, {
+      type: 'hipercard',
+      pattern: /^(38|60)/,
+      format: defaultFormat,
+      inputFormat: defaultInputFormat,
+      length: [13, 16, 19],
+      cvcLength: [3],
+      luhn: true
+    }, {
+      type: 'elo',
+      pattern: /^(636368|438935|504175|451416|509048|509067|509049|509069|509050|509074|509068|509040|509045|509051|509046|509066|509047|509042|509052|509043|509064|509040|36297|5067|4576|4011)/,
+      format: defaultFormat,
+      inputFormat: defaultInputFormat,
+      length: [16],
+      cvcLength: [3],
+      luhn: true
     }
   ];
 
@@ -104,7 +120,7 @@ angular.module('angularPayments')
       for (i = 0, len = cards.length; i < len; i++) {
 
         card = cards[i];
-        
+
         if (card.type === type) {
           return card;
         }
