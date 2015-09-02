@@ -4,7 +4,7 @@ angular.module('angularPayments')
 
 .factory('_Validate', ['Cards', 'Common', '$parse', function(Cards, Common, $parse){
 
-  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; }
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   var _luhnCheck = function(num) {
     var digit, digits, odd, sum, i, len;
@@ -56,7 +56,7 @@ angular.module('angularPayments')
       } else {
         return cvc.length >= 3 && cvc.length <= 4;
       }
-  }
+  };
 
   _validators['card'] = function(num, ctrl, scope, attr){
       var card, ref, typeModel;
@@ -98,51 +98,45 @@ angular.module('angularPayments')
           typeModel.assign(scope, card.type);
       }
 
-      ret = (ref = num.length, __indexOf.call(card.length, ref) >= 0) && (card.luhn === false || _luhnCheck(num));
-
-      return ret;
-  }
+      return (ref = num.length, __indexOf.call(card.length, ref) >= 0) && (card.luhn === false || _luhnCheck(num));
+  };
 
   _validators['expiry'] = function(val){
+    var obj, currentTime, expiry, prefix;
     // valid if empty - let ng-required handle empty
     if(val == null || val.length == 0) return true;
 
     obj = Common.parseExpiry(val);
 
-    month = obj.month;
-    year = obj.year;
-
-    var currentTime, expiry, prefix;
-
-    if (!(month && year)) {
+    if (!(obj.month && obj.year)) {
       return false;
     }
 
-    if (!/^\d+$/.test(month)) {
+    if (!/^\d+$/.test(obj.month)) {
       return false;
     }
 
-    if (!/^\d+$/.test(year)) {
+    if (!/^\d+$/.test(obj.year)) {
       return false;
     }
 
-    if (!(parseInt(month, 10) <= 12)) {
+    if (!(parseInt(obj.month, 10) <= 12)) {
       return false;
     }
 
-    if (year.length === 2) {
+    if (obj.year.length === 2) {
       prefix = (new Date).getFullYear();
       prefix = prefix.toString().slice(0, 2);
-      year = prefix + year;
+      obj.year = prefix + obj.year;
     }
 
-    expiry = new Date(year, month);
+    expiry = new Date(obj.year, obj.month);
     currentTime = new Date;
     expiry.setMonth(expiry.getMonth() - 1);
     expiry.setMonth(expiry.getMonth() + 1, 1);
 
     return expiry > currentTime;
-  }
+  };
 
   return function(type, val, ctrl, scope, attr){
     if(!_validators[type]){
@@ -161,7 +155,7 @@ angular.module('angularPayments')
 
 .factory('_ValidateWatch', ['_Validate', function(_Validate){
 
-    var _validatorWatches = {}
+    var _validatorWatches = {};
 
     _validatorWatches['cvc'] = function(type, ctrl, scope, attr){
         if(attr.paymentsTypeModel) {
@@ -172,7 +166,7 @@ angular.module('angularPayments')
                 }
             });
         }
-    }
+    };
 
     return function(type, ctrl, scope, attr){
         if(_validatorWatches[type]){
@@ -201,4 +195,4 @@ angular.module('angularPayments')
       ctrl.$parsers.push(validateFn);
     }
   }
-}])
+}]);
