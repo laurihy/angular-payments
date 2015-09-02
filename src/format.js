@@ -366,4 +366,4 @@ angular.module('angularPayments')
         _Format(attr.paymentsFormat, elem, ctrl);
       }
     }
-}]);
+}])

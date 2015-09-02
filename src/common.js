@@ -31,4 +31,4 @@ angular.module('angularPayments')
 
   return ret;
 
-}]);
+}])

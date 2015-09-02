@@ -195,4 +195,4 @@ angular.module('angularPayments')
       ctrl.$parsers.push(validateFn);
     }
   }
-}]);
+}])

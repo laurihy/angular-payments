@@ -119,4 +119,4 @@ angular.module('angularPayments')
       defaultInputFormat: function() { return defaultInputFormat;}
   }
 
-}]);
+}])
