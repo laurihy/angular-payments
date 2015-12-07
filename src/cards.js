@@ -78,6 +78,14 @@ angular.module('angularPayments')
       length: [13, 14, 15, 16],
       cvcLength: [3],
       luhn: true
+    }, {
+      type: 'dankort',
+      pattern: /^5019/,
+      format: defaultFormat,
+      inputFormat: defaultInputFormat,
+      length: [16],
+      cvcLength: [3],
+      luhn: true
     }
   ];
 
@@ -96,7 +104,7 @@ angular.module('angularPayments')
         }
 
       }
-  }
+  };
 
   var _fromType = function(type) {
       var card, i, len;
@@ -104,7 +112,7 @@ angular.module('angularPayments')
       for (i = 0, len = cards.length; i < len; i++) {
 
         card = cards[i];
-        
+
         if (card.type === type) {
           return card;
         }
@@ -113,10 +121,15 @@ angular.module('angularPayments')
   };
 
   return {
-      fromNumber: function(val) { return _fromNumber(val) },
-      fromType: function(val) { return _fromType(val) },
+      fromNumber: function(val) { return _fromNumber(val); },
+      fromType: function(val) { return _fromType(val); },
       defaultFormat: function() { return defaultFormat;},
-      defaultInputFormat: function() { return defaultInputFormat;}
-  }
+      defaultInputFormat: function() { return defaultInputFormat;},
+      defineType: function(config){
+        config.format = config.format || defaultFormat;
+        config.inputFormat = config.inputFormat || defaultInputFormat;
+        cards.push(config);
+      }
+  };
 
-}])
+}]);
