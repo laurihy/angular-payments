@@ -81,8 +81,8 @@ angular.module('angularPayments')
     }, {
       type: 'dankort',
       pattern: /^5019/,
-      format: /(\d{1,4})/g,
-      inputFormat: /(?:^|\s)(\d{4})$/,
+      format: defaultFormat,
+      inputFormat: defaultInputFormat,
       length: [16],
       cvcLength: [3],
       luhn: true
@@ -124,7 +124,12 @@ angular.module('angularPayments')
       fromNumber: function(val) { return _fromNumber(val); },
       fromType: function(val) { return _fromType(val); },
       defaultFormat: function() { return defaultFormat;},
-      defaultInputFormat: function() { return defaultInputFormat;}
+      defaultInputFormat: function() { return defaultInputFormat;},
+      defineType: function(config){
+        config.format = config.format || defaultFormat;
+        config.inputFormat = config.inputFormat || defaultInputFormat;
+        cards.push(config);
+      }
   };
 
 }]);

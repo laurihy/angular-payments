@@ -32,9 +32,9 @@ Be sure to also configure Stripe by setting your publishable key, something like
 To use Angular Payments, add angularPayments as a dependency to your AngularJS module or app.
 
 If you are using `stripe-form`, follow the instructions above on including
-stripe. 
+stripe.
 
-The module ships 3 directives, all of which should be added as attributes to elements. 
+The module ships 3 directives, all of which should be added as attributes to elements.
 
 * paymentsValidate
 * paymentsFormat
@@ -58,13 +58,13 @@ Possible validation types are:
 ```html
 	<input type="text" ng-model="number" payments-validate="card" />
 ```
-	
+
 Card validation also uses an extra attribute "payments-type-model". This attribute defines a model on the scope where the card type will be set as the field recognizes the type from the number.
 
 ```html
 	<input type="text" ng-model="number" payments-validate="card" payments-type-model="type"/>
 ```
-	
+
 In this case $scope.number will have the card number from the field and $scope.type will have the credit card type.
 
 The card validator will also place a $card object on the on the input control as the card type is recognized.  This card object has a number of different fields.  It's easiest to get to this object if both the form and the input have a name, in which case you can access the card object at $scope.formName.inputName.$card.
@@ -82,11 +82,11 @@ Expiry actually matches, that a string with format mm / yy[yy] is a valid and no
 ```html
 	<input type="text" ng-model="cvc" payments-validate="cvc" />
 ```
-	
+
 CVC validation also uses an extra attribute "payments-type-model". This attribute defines a model on the scope where the CVC will load the card type in order to validate CVC rules based on the card.  This attribute is meant to be used in conjunction with the same attribute on the card validation.
 
 ```html
-	<input type="text" ng-model="cvc" payments-validate="cvc" payments-type-model="type"/>	
+	<input type="text" ng-model="cvc" payments-validate="cvc" payments-type-model="type"/>
 ```
 
 In this case the CVC field will change its validation rules when $scope.type changes.  For example, a 'visa' type will require 3 digits, but an 'amex' type will allow 3 or 4.
@@ -98,7 +98,7 @@ Is used for formatting fields.
 ```html
 	<input type="text" payments-format="FORMATTING_TYPE" />
 ```
-	
+
 For formatting to work, element must have an associated ng-model -value.
 
 Possible formats:
@@ -130,11 +130,35 @@ Possible formats:
 - Limit to 4 digits
 - *Could also be used to match with card type, but this is not implemented yet.*
 
+### Custom card types
+
+If you want to define your own obscure card type, you can use the `defineType` method from the `Cards` factory. When defining a new card type, you need to consider the following:
+
+* `type` - The name by which the card will be referred (e.g. `visa`, `mastercard` etc.).
+* `pattern` - The regex that a card needs to match in order to be considered valid.
+* `cvcLength` - An array of digits that specify how long the CVC number for the particular card type can be.
+* `length` - Array of digits that specify how long the card number is allowed to be.
+* `luhn` - A boolean that specifies whether the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm) should be used to validate the card number.
+
+#### Example custom card:
+
+```javascript
+angular.module('myModule').run(['Cards', function(Cards){
+  Cards.defineType({
+    type: 'myType',
+    pattern: /^1337/,
+    length: [42],
+    cvcLength: [3],
+    luhn: true
+  });
+}]);
+```
+
 ### stripeForm
 
 Intercepts form-submission, obtains stripeToken and then fires a callback. Essentially abstracts away what you would do manually when following instructions at https://stripe.com/docs/stripe.js
 
-	<form stripe-form="CALLBACK"> 
+	<form stripe-form="CALLBACK">
 	...
 	</form>
 
@@ -170,7 +194,7 @@ Basically the directive sends the credit card details directly to stripe, which 
 See example-folder. You can run the example with
 
 	grunt connect
-	
+
 then connect to it at http://localhost:8000/example/index.html
 
 
@@ -180,7 +204,7 @@ Please Edit files in `src/`-folder and before submitting pull request, run grunt
 
 Despite of slow response times, all patches, bugfixes and features are more and welcome and much appreciated. Thanks to all who have and will contribute! :)
 
-## License 
+## License
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to
 the following conditions:
