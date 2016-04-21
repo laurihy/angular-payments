@@ -16,7 +16,7 @@ angular.module('angularPayments')
                     'cvc', 'name','addressLine1', 
                     'addressLine2', 'addressCity',
                     'addressState', 'addressZip',
-                    'addressCountry']
+                    'addressCountry', 'validationType']
     
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){

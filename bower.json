@@ -21,6 +21,9 @@
     "**/.*",
     "node_modules",
     "bower_components",
+    "Gruntfile.js",
+    "example",
+    "src",
     "test",
     "tests"
   ]
