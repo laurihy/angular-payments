@@ -11,6 +11,21 @@ angular.module('angularPayments')
 
     value = value || ''
 
+    //if we are passed a date, handle it
+    if(value.getDate && value.getFullYear && value.getMonth) {
+      if(isNaN(value.getDate())) {
+        return {
+          month: NaN,
+          year: NaN
+        };
+      } else {
+        return {
+          month: value.getMonth(),
+          year: value.getFullYear()
+        };
+      }
+    }
+    
     value = value.replace(/\s/g, '');
     _ref = value.split('/', 2), month = _ref[0], year = _ref[1];
 
