@@ -78,6 +78,14 @@ angular.module('angularPayments')
       length: [13, 14, 15, 16],
       cvcLength: [3],
       luhn: true
+    }, {
+      type: 'verve',
+      pattern: /^([506]{3})([0-9]{1,16})$/,
+      format: defaultFormat,
+      inputFormat: defaultInputFormat,
+      length: [19],
+      cvcLength: [3],
+      luhn: false
     }
   ];
 
@@ -104,7 +112,7 @@ angular.module('angularPayments')
       for (i = 0, len = cards.length; i < len; i++) {
 
         card = cards[i];
-        
+
         if (card.type === type) {
           return card;
         }
