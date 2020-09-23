@@ -1,3 +1,9 @@
+# Deprecated, unmaintained
+
+Thank you all for all the contributions and support over the years! It's been evident already for a while, that this repository isn't been actively maintained anymore, and modern and _much_ better alternatives exist. For Angular, [ngx-stripe](https://www.npmjs.com/package/ngx-stripe) is probably a good alternative (no personal experience), or if you just need credit card validation, have a look into e.g. https://formvalidation.io/guide/validators/credit-card
+
+Using _this_ module isn't a good idea.
+
 # Angular Payments
 
 An Angular Module that provides directives for *formatting* and *validating* forms related to payments. Also, it ships with a directive that makes it easy to integrate with Stripe's wonderful stripe.js.
