@@ -52,11 +52,9 @@ angular.module('angularPayments')
         expMonthUsed = scope.expMonth ? true : false;
         expYearUsed = scope.expYear ? true : false;
 
-        if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
-        }
+        exp = Common.parseExpiry(scope.expiry)
+        scope.expMonth = exp.month
+        scope.expYear = exp.year
 
         var button = form.find('button');
         button.prop('disabled', true);
