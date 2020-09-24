@@ -40,6 +40,10 @@ angular.module('angularPayments')
         return;
       }
 
+      if ((e.metaKey || e.ctrlKey) && e.which === 118) {
+        return;
+      }
+
       if (!/^\d+$/.test(digit) && !e.meta && e.keyCode >= 46) {
         e.preventDefault();
         return;
