@@ -5,7 +5,7 @@ angular.module('angularPayments')
   var defaultFormat = /(\d{1,4})/g;
   var defaultInputFormat =  /(?:^|\s)(\d{4})$/;
 
-        var cards = [
+  var cards = [
     {
       type: 'maestro',
       pattern: /^(5018|5020|5038|6304|6759|676[1-3])/,
@@ -96,7 +96,7 @@ angular.module('angularPayments')
         }
 
       }
-  }
+  };
 
   var _fromType = function(type) {
       var card, i, len;

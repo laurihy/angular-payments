@@ -10,23 +10,23 @@ angular.module('angularPayments')
 
 
   // filter valid stripe-values from scope and convert them from camelCase to snake_case
-  _getDataToSend = function(data){
+  var _getDataToSend = function(data){
            
     var possibleKeys = ['number', 'expMonth', 'expYear', 
                     'cvc', 'name','addressLine1', 
                     'addressLine2', 'addressCity',
                     'addressState', 'addressZip',
-                    'addressCountry']
+                    'addressCountry'];
     
     var camelToSnake = function(str){
       return str.replace(/([A-Z])/g, function(m){
         return "_"+m.toLowerCase();
       });
-    }
+    };
 
     var ret = {};
 
-    for(i in possibleKeys){
+    for(var i in possibleKeys){
         if(data.hasOwnProperty(possibleKeys[i])){
             ret[camelToSnake(possibleKeys[i])] = angular.copy(data[possibleKeys[i]]);
         }
@@ -35,7 +35,7 @@ angular.module('angularPayments')
     ret['number'] = (ret['number'] || '').replace(/ /g,'');
 
     return ret;
-  }
+  };
 
   return {
     restrict: 'A',
@@ -49,13 +49,13 @@ angular.module('angularPayments')
 
       form.bind('submit', function() {
 
-        expMonthUsed = scope.expMonth ? true : false;
-        expYearUsed = scope.expYear ? true : false;
+        var expMonthUsed = scope.expMonth ? true : false;
+        var expYearUsed = scope.expYear ? true : false;
 
         if(!(expMonthUsed && expYearUsed)){
-          exp = Common.parseExpiry(scope.expiry)
-          scope.expMonth = exp.month
-          scope.expYear = exp.year
+          var exp = Common.parseExpiry(scope.expiry);
+          scope.expMonth = exp.month;
+          scope.expYear = exp.year;
         }
 
         var button = form.find('button');

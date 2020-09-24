@@ -3,7 +3,7 @@ angular.module('angularPayments')
 
 .factory('_Format',['Cards', 'Common', '$filter', function(Cards, Common, $filter){
 
-  var _formats = {}
+  var _formats = {};
 
   var _hasTextSelected = function($target) {
       var ref;
@@ -169,12 +169,15 @@ angular.module('angularPayments')
 
     ctrl.$parsers.push(_parseCardNumber);
     ctrl.$formatters.push(_getFormattedCardNumber);
-  }
+  };
 
 
   // cvc
 
-  _formatCVC = function(e){
+  var _formatCVC = function(e){
+
+    var $target, digit, val;
+
     $target = angular.element(e.currentTarget);
     digit = String.fromCharCode(e.which);
     
@@ -191,15 +194,15 @@ angular.module('angularPayments')
       e.preventDefault();
       return;
     }
-  }
+  };
 
   _formats['cvc'] = function(elem){
     elem.bind('keypress', _formatCVC)
-  }
+  };
 
   // expiry
 
-  _restrictExpiry = function(e) {
+  var _restrictExpiry = function(e) {
     var $target, digit, value;
     
     $target = angular.element(e.currentTarget);
@@ -223,7 +226,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatExpiry = function(e) {
+  var _formatExpiry = function(e) {
     var $target, digit, val;
     
     digit = String.fromCharCode(e.which);
@@ -247,7 +250,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatForwardExpiry = function(e) {
+  var _formatForwardExpiry = function(e) {
     var $target, digit, val;
     
     digit = String.fromCharCode(e.which);
@@ -264,7 +267,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatForwardSlash = function(e) {
+  var _formatForwardSlash = function(e) {
     var $target, slash, val;
     
     slash = String.fromCharCode(e.which);
@@ -281,7 +284,7 @@ angular.module('angularPayments')
     }
   };
 
-  _formatBackExpiry = function(e) {
+  var _formatBackExpiry = function(e) {
     var $target, value;
     
     if (e.meta) {
@@ -338,7 +341,7 @@ angular.module('angularPayments')
 
     ctrl.$parsers.push(_parseExpiry);
     ctrl.$formatters.push(_getFormattedExpiry);
-  }
+  };
 
   return function(type, elem, ctrl){
     if(!_formats[type]){
