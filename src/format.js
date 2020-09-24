@@ -162,8 +162,8 @@ angular.module('angularPayments')
   };
 
   _formats['card'] = function(elem, ctrl){
-    elem.bind('keypress', _restrictCardNumber);
-    elem.bind('keypress', _formatCardNumber);
+    elem.bind('keyup', _restrictCardNumber);
+    elem.bind('keyup', _formatCardNumber);
     elem.bind('keydown', _formatBackCardNumber);
     elem.bind('paste', _reFormatCardNumber);
 
@@ -194,7 +194,7 @@ angular.module('angularPayments')
   }
 
   _formats['cvc'] = function(elem){
-    elem.bind('keypress', _formatCVC)
+    elem.bind('keyup', _formatCVC)
   }
 
   // expiry
@@ -330,10 +330,10 @@ angular.module('angularPayments')
 
 
   _formats['expiry'] = function(elem, ctrl){
-    elem.bind('keypress', _restrictExpiry);
-    elem.bind('keypress', _formatExpiry);
-    elem.bind('keypress', _formatForwardSlash);
-    elem.bind('keypress', _formatForwardExpiry);
+    elem.bind('keyup', _restrictExpiry);
+    elem.bind('keyup', _formatExpiry);
+    elem.bind('keyup', _formatForwardSlash);
+    elem.bind('keyup', _formatForwardExpiry);
     elem.bind('keydown', _formatBackExpiry);
 
     ctrl.$parsers.push(_parseExpiry);
